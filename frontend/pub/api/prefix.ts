@@ -1,0 +1,1 @@
+export const PREFIX = "/ludumdare/ld56";

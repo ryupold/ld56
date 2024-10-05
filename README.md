@@ -1,2 +1,3 @@
-# ld56
-Theme: Tiny Creatures
+# Ludum Dare 56
+
+**Theme: Tiny Creatures**

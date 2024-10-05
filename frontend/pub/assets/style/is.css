@@ -1,0 +1,24 @@
+.is.w100h100 {
+    width: 100%;
+    height: 100%;
+}
+
+.is.fullsize {
+    width: 100vw;
+    height: 100vh;
+}
+
+.is.centrum {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.is.centrum>* {
+    margin: auto auto;
+}
+
+.is.soft-border {
+    padding: 1em;
+    border-radius: var(--border-radius-soft);
+}

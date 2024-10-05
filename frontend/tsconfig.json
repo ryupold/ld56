@@ -1,0 +1,14 @@
+{
+  "extends": "../../../module.tsconfig.json",
+  "references": [
+    {
+      "path": "../../../vode/frontend/"
+    },
+    {
+      "path": "../../../tools/frontend/"
+    }
+  ],
+  "include": [
+    "./**/*.ts",
+  ]
+}

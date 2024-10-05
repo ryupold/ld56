@@ -1,0 +1,59 @@
+/* FONTS */
+
+:root {
+  /*** BREAKING POINTS ****************************************************************/
+  --break-s: 555px;
+  --break-m: 700px;
+
+  /*** COLORS *************************************************************************/
+  --palette-1: #696969;
+  --palette-2: #420420;
+  --palette-3: #080085;
+  --palette-4: #007007;
+
+  /***** background colors *****/
+  --color-bg-l: white;
+  --color-bg-m: rgb(189, 189, 189);
+  --color-bg-h: rgb(151, 151, 151);
+
+  /***** foreground colors *****/
+  --color-fg-l: #dde;
+  --color-fg-m: #dde;
+  --color-fg-h: #ddf;
+
+
+  /*** DIMENSIONS *********************************************************************/
+
+
+  /*** SPACING ************************************************************************/
+
+
+  /*** FONTS **************************************************************************/
+
+  /*** BORDERS **************************************************************************/
+  --border-default: 1px solid var(--color-fg-l);
+  --border-radius-soft: 0.5em;
+  --border-radius-hard: 0.1em;
+
+}
+
+body,html {
+  margin: 0;
+  padding: 0;
+  /* overflow: hidden; */
+  /* overscroll-behavior: none; */
+}
+
+body {
+  font-family: var(--main-font);
+  background-color: var(--color-bg-l);
+  color: var(--color-fg-l);
+  box-sizing: border-box;
+  /* overscroll-behavior: contain; */
+  position: relative;
+}
+
+#app {
+  width: 100vw;
+  height: 100vh;
+}

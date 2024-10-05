@@ -1,0 +1,19 @@
+.comp-button {
+    background-color: var(--color-bg-h);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
+    color: var(--color-fg-h);
+    padding: 0.25em 0.5em;
+}
+
+.comp-button.is.soft-border {
+    padding: 0.25em 0.5em;
+}
+
+.comp-button:hover {
+    background-color: var(--color-fg-h);
+    color: var(--color-bg-h);
+}
