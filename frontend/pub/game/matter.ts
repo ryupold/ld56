@@ -1,5 +1,8 @@
 
-/** https://brm.io/matter-js/docs/classes */
+/** https://brm.io/matter-js/docs/classes
+ * 
+ * declare var Matter: MatterJs;
+ */
 export type MatterJs = {
     Engine: EngineModule,
     Body: BodyModule,
@@ -213,5 +216,6 @@ export type MouseModule = {
 };
 
 export type Mouse = {
-
+    x: number,
+    y: number,
 };

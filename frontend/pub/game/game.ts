@@ -1,5 +1,6 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
+import { closeClaw, openClaw } from "./claw.js";
 import { radians } from "./math.js";
 import { setStatic } from "./matter-helpers.js";
 import { MatterJs, V2, Composite as CompositeType, Body, BodyOptions } from "./matter.js";
@@ -12,24 +13,12 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Vector = Matter.Vector;
 
-
-async function* followMouse(s: State) {
-    while (true) {
-        await delay(20);
-        
-        yield undefined;
-    }
-}
-
 export async function initGame(s: State) {
     createHousing(s);
 
-
     const chain = createChain(s);
-    const claw = createClaw(s, { upper: 80, lower: 100 });
-    console.log(claw.claw.composites[0].composites[0].bodies[0]);
+    const claw = createClaw(s, { x: 0, y: chain.chain.bodies[chain.chain.bodies.length - 1].position.y + 10 }, { upper: s.chain.claw.distance.upper, lower: s.chain.claw.distance.lower });
     Composite.add(s.world, Composite.create({
-        // composites: [chain.chain, claw],
         constraints: [
             Constraint.create({
                 bodyA: chain.chain.bodies[chain.chain.bodies.length - 1],
@@ -37,36 +26,23 @@ export async function initGame(s: State) {
             }),
         ]
     }));
-
-    //test
-    async function closeClaw() {
-        await delay(2000);
-        const steps = 30;
-        const targetU = 60, targetL = 20;
-        const startU = claw.distance.upper.length;
-        const startL = claw.distance.lower.length;
-        const distU = startU - targetU;
-        const distL = startL - targetL;
-        for (let i = 0; i < steps; i++) {
-            claw.distance.upper.length = (1 - i / steps) * startU + i / steps * targetU;
-            claw.distance.lower.length = (1 - i / steps) * startL + i / steps * targetL;
-            await delay(50);
-        }
-    }
-    await closeClaw();
+    s.chain.anchor = chain.anchor;
+    s.chain.claw.comp = claw.claw;
+    s.chain.claw.distance.upperConstraint = claw.distance.upper;
+    s.chain.claw.distance.lowerConstraint = claw.distance.lower;
 }
 
 function createHousing(s: State) {
     const groundHeight = 50;
     const groundWidth = s.screen.width - 100;
-    let ground = Bodies.rectangle((s.screen.width - groundWidth) / 2 + groundWidth / 2, s.screen.height - groundHeight, groundWidth, groundHeight, {
-        angle: radians(10),
+    let ground = Bodies.rectangle((s.screen.width - groundWidth) / 2 + groundWidth / 2, s.screen.height - groundHeight/2, groundWidth, groundHeight, {
+        // angle: radians(10),
     });
     Matter.Body.setStatic(ground, true);
     Composite.add(s.world, ground);
 }
 
-function createClaw(s: State, open: { upper: number, lower: number }) {
+function createClaw(s: State, offset: V2, open: { upper: number, lower: number }) {
     const segmentWidth = 10;
     const segmentHeight = 50;
     /** (c1)
@@ -190,7 +166,7 @@ function createClaw(s: State, open: { upper: number, lower: number }) {
 
 
     // Composite.translate(claw, { x: 100, y: 100 }, true);
-    Composite.translate(claw, { x: s.screen.width / 2, y: 160 }, true);
+    Composite.translate(claw, Vector.add({ x: s.screen.width / 2, y: 0 }, offset), true);
 
     Composite.add(s.world, claw);
     return { claw, distance: { upper: distanceKeeperUpper, lower: distanceKeeperLower } };
@@ -202,9 +178,7 @@ function createClaw(s: State, open: { upper: number, lower: number }) {
  * @param s State
  * @returns (chain composite, anchor body)
  */
-export function createChain(s: State) {
-    const segmentSize = 20;
-    const length = 100;
+export function createChain(s: State, length: number = 300, segmentSize: number = 10) {
     const segments = Math.floor(length / segmentSize);
 
     let bodies = <Body[]>[];
@@ -218,9 +192,10 @@ export function createChain(s: State) {
         length: segmentSize + 1,
         stiffness: 1,
     });
-    Composite.translate(chain, { x: s.screen.width / 2, y: 20 });
+    chain.label = "chain";
+    Composite.translate(chain, { x: s.screen.width / 2, y: 0 });
 
-    const anchor = Bodies.circle(s.screen.width / 2, 0, 10, { collisionFilter: { mask: 0, category: 0 } });
+    const anchor = Bodies.circle(s.screen.width / 2, 0, 10, { label: "anchor", collisionFilter: { mask: 0, category: 0 } });
     Matter.Body.setStatic(anchor, true);
     const complete = Composite.create({
         bodies: [anchor],
@@ -234,6 +209,7 @@ export function createChain(s: State) {
         })],
     });
 
+    Composite.translate(complete, { x: 0, y: -length }, true);
 
     Composite.add(s.world, complete);
     return { chain, anchor };
