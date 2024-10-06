@@ -22,6 +22,15 @@ export type World = {};
 export type CompositeModule = {
     add: (composite: Composite, object: Composite | object | object[]) => void;
     create: (options: {bodies?: Body[], composites?: Composite[], constraints?: Constraint[]}) => Composite;
+
+    rotate: (comp: Composite, rotation: number, point: V2, recursive?: boolean) => void;
+    scale: (comp: Composite, scaleX: number, scaleY: number, point: V2, recursive?: boolean) => void;
+    translate: (comp: Composite, translation: V2, recursive?: boolean) => void;
+    
+    clear: (comp: Composite, keepStatic: boolean, deep?: boolean) => void;
+    allBodies: (comp: Composite) => Body[];
+    allComposites: (comp: Composite) => Composite[];
+    allConstraints: (comp: Composite) => Constraint[];
 };
 export type Composite = {};
 export type BodyModule = {
