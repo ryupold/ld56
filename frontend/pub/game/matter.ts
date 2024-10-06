@@ -8,7 +8,7 @@ export type MatterJs = {
     Composites: CompositesModule,
     Constraint: ConstraintModule,
     MouseConstraint: any,
-    Mouse: any,
+    Mouse: MouseModule,
     Events: EventsModule,
     Render: any,
     Runner: any,
@@ -179,6 +179,11 @@ export type Constraint = {
     id: number,
     label: string,
     type: "constraint",
+
+    length: number,
+    stiffness: number,
+    angularStiffness: number,
+    damping: number,
 };
 
 export type VectorModule = {
@@ -201,4 +206,12 @@ export type VectorModule = {
     
     rotate: (v: V2, angle: number, output?: V2) => V2;
     rotateAbout: (v: V2, angle: number, point: V2, output?: V2) => V2;
+};
+
+export type MouseModule = {
+    create: (element: HTMLElement) => Mouse;
+};
+
+export type Mouse = {
+
 };

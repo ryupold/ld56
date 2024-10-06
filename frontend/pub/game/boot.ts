@@ -58,5 +58,7 @@ export function initEngine(s: State, canvas: HTMLCanvasElement) {
 
     s.world = engine.world;
 
+    s.mouse =  Matter.Mouse.create(render.canvas);
+
     s.patch(initGame);
 }
