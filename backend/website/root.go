@@ -1,9 +1,9 @@
-package main
+package website
 
 import (
 	"errors"
 	"net/http"
-	"ryupold/website/loggy"
+	"ryupold/website/ludumdare/ld56/loggy"
 	"strings"
 )
 

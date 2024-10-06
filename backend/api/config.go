@@ -1,8 +1,8 @@
 package api
 
 import (
-	"ryupold/website"
 	"ryupold/website/ludumdare/ld56/db"
+	"ryupold/website/ludumdare/ld56/website"
 )
 
 type APIConfig struct {

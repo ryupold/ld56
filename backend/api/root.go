@@ -2,9 +2,8 @@ package api
 
 import (
 	"net/http"
+	"ryupold/website/ludumdare/ld56/website"
 	"strings"
-
-	"ryupold/website"
 )
 
 func Root(config APIConfig) func(r *http.Request) (website.MaybeRoute, error) {

@@ -7,7 +7,7 @@ export const content = (s: State): Vode<State> => {
     resetID();
 
     return v([MAIN, { class: "content" },
-        [H1, "Creature Grabber"],
+        // [H1, "Creature Grabber"],
         [CANVAS, {
             id: "game-canvas",
             onMount: (ss: State, el: HTMLElement) => {
@@ -17,7 +17,7 @@ export const content = (s: State): Vode<State> => {
                 if(el.parentNode !== parent) {
                     el.remove();
                     parent?.appendChild(el);
-                }
+                };
             },
             onclick: (ss: State, e: Event) => {
                 s.events.onClick.forEach(c => c(s, e as MouseEvent));
@@ -30,7 +30,9 @@ export const content = (s: State): Vode<State> => {
             [BUTTON, {onclick: (ss: State, e: Event) => moveClaw(ss, 100)}, "drive ->"],
             [BUTTON, {onclick: (ss: State, e: Event) => moveClawVertically(ss, -300)}, "⬆️"],
             [BUTTON, {onclick: (ss: State, e: Event) => moveClawVertically(ss, 0)}, "🔽"],
-            
+            [BUTTON, {
+                onclick: () => document.documentElement!.requestFullscreen(),
+            }, "fullscreen"]
         ]
     ]);
 

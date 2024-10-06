@@ -1,4 +1,4 @@
-package main
+package website
 
 var holdTheLineList = []string{
 	"/.env",

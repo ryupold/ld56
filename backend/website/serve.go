@@ -1,4 +1,4 @@
-package main
+package website
 
 import (
 	"compress/gzip"
@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"ryupold/website/loggy"
+	"ryupold/website/ludumdare/ld56/loggy"
 	"strings"
 	"time"
 )
@@ -86,6 +86,7 @@ func ServeFile(w http.ResponseWriter, req *http.Request, filePath string, compre
 
 	//headers
 	WriteContentType(file.Name(), w)
+	w.Header().Set("Permissions-Policy", "fullscreen=*")
 
 	output := io.Writer(w)
 	if compress {
