@@ -10,6 +10,7 @@ export function initP5(
     });
 }
 
+/** https://p5js.org/reference/ */
 export type Sketch = {
     //canvas 
     createCanvas: ((width: number, height: number, renderer?: "P2D" | "WEBGL", canvas?: HTMLCanvasElement) => void) | ((width: number, height: number, canvas?: HTMLCanvasElement) => void);
@@ -51,6 +52,10 @@ export type Sketch = {
     //math
     createVector: (x?: number, y?: number, z?: number) => P5Vector;
     Vector: { fromAngle: (angle: number) => P5Vector };
+
+    //trigonometry
+    degrees: (radians: number) => number;
+    radians: (degrees: number) => number;
 
     //hardware
     mouseX: number;

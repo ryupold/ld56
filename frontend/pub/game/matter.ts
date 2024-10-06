@@ -1,3 +1,5 @@
+
+/** https://brm.io/matter-js/docs/classes */
 export type MatterJs = {
     Engine: EngineModule,
     Body: BodyModule,
@@ -87,6 +89,8 @@ export type BodyOptions = {
     label?: string,
 
     angle?: number,
+
+    /** default: 0.001 */
     density?: number,
 
     position?: V2,

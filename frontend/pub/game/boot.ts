@@ -1,10 +1,9 @@
 import { State } from "../state.js";
 import { initP5, Sketch } from "./p5.js";
-import { MatterJs, World } from "./matter.js";
+import { MatterJs } from "./matter.js";
+import { initGame } from "./game.js";
 
 declare var Matter: MatterJs;
-
-let world: World;
 
 function setup(r: Sketch) {
     r.createCanvas(600, 480);
@@ -17,18 +16,17 @@ function draw(r: Sketch) {
     r.rect(20, 20, 60);
 }
 
-export function startGame(s: State) {
+export function initEngine(s: State, canvas: HTMLCanvasElement) {
     // initP5(setup, draw);
 
-    const engine = Matter.Engine.create();
-    world = engine.world;
-
+    const engine = Matter.Engine.create();    
     const render = Matter.Render.create({
         element: document.body,
         engine: engine,
+        canvas: canvas,
         options: {
-            width: 800,
-            height: 600,
+            width: s.screen.width,
+            height: s.screen.height,
             showAngleIndicator: true,
             showCollisions: true,
             showVelocity: true
@@ -36,35 +34,29 @@ export function startGame(s: State) {
     });
     Matter.Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
+        max: { x: s.screen.width, y: s.screen.height }
     });
     Matter.Render.run(render);
 
-    const mouse = Matter.Mouse.create(render.canvas);
-    const mouseConstraint = Matter.MouseConstraint.create(engine, {
-        mouse: mouse,
-        constraint: {
-            stiffness: 0.9,
-            render: {
-                visible: true
-            }
-        }
-    });
-    Matter.Composite.add(world, mouseConstraint);
-    // keep the mouse in sync with rendering
-    render.mouse = mouse;
-
-    // Matter.Engine.run(engine);
     const runner = Matter.Runner.create({
-        delta: 1000 / 60,
-        enabled: true
+        //defaults:
+        // delta: 1000 / 60,
+        // frameDelta: null,
+        // frameDeltaSmoothing: true,
+        // frameDeltaSnapping: true,
+        // frameDeltaHistory: [],
+        // frameDeltaHistorySize: 100,
+        // frameRequestId: null,
+        // timeBuffer: 0,
+        // timeLastTick: null,
+        // maxUpdates: null,
+        // maxFrameTime: 1000 / 30,
+        // lastUpdatesDeferred: 0,
+        // enabled: true
     });
     Matter.Runner.run(runner, engine);
 
+    s.world = engine.world;
 
-    //TODO: move somewhere else
-    setInterval(() => {
-        const bobby = Matter.Bodies.circle(100, 100, 50);
-        Matter.Composite.add(world, bobby);
-    }, 1111);
+    s.patch(initGame);
 }
