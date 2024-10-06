@@ -5,7 +5,7 @@ export const content = (s: State): Vode<State> => {
     resetID();
 
     return v([MAIN, { class: "content" },
-        [H1, "TODO"]
+        [H1, "Creature Grabber"]
     ]);
 
 };
