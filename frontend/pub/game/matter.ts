@@ -5,7 +5,7 @@ export type MatterJs = {
     Body: BodyModule,
     Bodies: BodiesModule,
     Composite: CompositeModule,
-    Composites: any,
+    Composites: CompositesModule,
     Constraint: ConstraintModule,
     MouseConstraint: any,
     Mouse: any,
@@ -41,6 +41,10 @@ export type Composite = {
     id: number,
     label: string,
     type: "composite",
+
+    bodies: Body[],
+    composites: Composite[],
+    constraints: Constraint[],
 };
 export type BodyModule = {
     applyForce: (body: Body, position: V2, force: V2) => void;
@@ -109,6 +113,8 @@ export type Body = {
 
 export type BodyOptions = {
     label?: string,
+
+    parts?: Body[],
 
     angle?: number,
 
