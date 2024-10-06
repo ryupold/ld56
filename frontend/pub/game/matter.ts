@@ -6,7 +6,7 @@ export type MatterJs = {
     Bodies: BodiesModule,
     Composite: CompositeModule,
     Composites: any,
-    Constraint: any,
+    Constraint: ConstraintModule,
     MouseConstraint: any,
     Mouse: any,
     Events: EventsModule,
@@ -20,7 +20,8 @@ export type Engine = { gravity: { x: number, y: number }, world: World };
 export type World = {};
 
 export type CompositeModule = {
-    add: (composite: Composite, object: Composite | object | object[]) => void
+    add: (composite: Composite, object: Composite | object | object[]) => void;
+    create: (options: {bodies?: Body[], composites?: Composite[], constraints?: Constraint[]}) => Composite;
 };
 export type Composite = {};
 export type BodyModule = {
@@ -125,3 +126,9 @@ export type V2 = { x: number, y: number };
 export type EventsModule = {
     on: (target: Body, event: "sleepStart" | "sleepEnd", callback: (evt: { source: Body, name: string }) => void) => void
 };
+
+export type ConstraintModule = {
+
+};
+
+export type Constraint = {};

@@ -26,3 +26,14 @@ function createHousing(s: State) {
     Body.setStatic(ground, true);
     Composite.add(s.world, ground);
 }
+
+function createClaw(s: State) {
+    const segmentWidth = 20;
+    const segmentHeight = 40 + segmentWidth;
+    function createClawSegment() {
+        const rect = Bodies.rectangle(0, 0, segmentWidth, segmentHeight, {angle: radians(0)});
+        const c1 = Bodies.circle(segmentWidth/2, 0, segmentWidth/2);
+        const c2 = Bodies.circle(segmentWidth/2, segmentHeight, segmentWidth/2);
+        Composite.create({bodies: [c1, rect, c2]});
+    }
+}
