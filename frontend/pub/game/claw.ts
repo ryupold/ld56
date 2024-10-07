@@ -6,6 +6,8 @@ declare var Matter: MatterJs;
 
 /** for opening and closing the claw */
 async function clawGrab(s: State, startU: number, startL: number, targetU: number, targetL: number, time: number = 3000, steps: number = 30) {
+    startU = s.chain.claw.distance.upperConstraint.length;
+    startL = s.chain.claw.distance.lowerConstraintB.length;
     for (let i = 0; i < steps; i++) {
         s.chain.claw.distance.upperConstraint.length = (1 - i / steps) * startU + i / steps * targetU;
         s.chain.claw.distance.lowerConstraint.length = (1 - i / steps) * startL + i / steps * targetL;
@@ -14,11 +16,11 @@ async function clawGrab(s: State, startU: number, startL: number, targetU: numbe
 }
 
 export async function openClaw(s: State) {
-    await clawGrab(s, 60, 20, s.chain.claw.distance.upper, s.chain.claw.distance.lower);
+    await clawGrab(s, s.chain.claw.distance.upperMin, s.chain.claw.distance.lowerMin, s.chain.claw.distance.upperMax, s.chain.claw.distance.lowerMax);
 }
 
 export async function closeClaw(s: State) {
-    await clawGrab(s, s.chain.claw.distance.upper, s.chain.claw.distance.lower, 60, 10);
+    await clawGrab(s, s.chain.claw.distance.upperMax, s.chain.claw.distance.lowerMax, s.chain.claw.distance.upperMin, s.chain.claw.distance.lowerMin);
 }
 
 export async function moveClaw(s: State, distance: number, time: number = 3000, steps: number = 20) {

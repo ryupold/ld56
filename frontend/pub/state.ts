@@ -5,7 +5,7 @@ import { World, Body, Mouse, Composite, Constraint } from "./game/matter.js";
 export const init = createState({
     route: route(window.location),
 
-    screen: { width: 600, height: 480 },
+    screen: { width: 600, height: 400 },
 
     world: <World><unknown>undefined,
     
@@ -14,7 +14,7 @@ export const init = createState({
         claw: {
             comp: <Composite><unknown>undefined,
             distance: {
-                upper: 80, lower: 100,
+                upperMin: 60, upperMax: 80, lowerMin: 50, lowerMax: 100,
                 upperConstraint: <Constraint><unknown>undefined, 
                 lowerConstraint: <Constraint><unknown>undefined,
             }
@@ -27,9 +27,11 @@ export const init = createState({
     },
 
     events: {
-        onClick: <((s: any, e: MouseEvent)=>unknown)[]>[mouseClick],
+        onClick: <((_: any, e: MouseEvent)=>unknown)[]>[],
     },
 });
+
+init.events.onClick.push(mouseClick);
 
 export type State = typeof init;
 

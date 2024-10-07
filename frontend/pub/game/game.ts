@@ -17,7 +17,7 @@ export async function initGame(s: State) {
     createHousing(s);
 
     const chain = createChain(s);
-    const claw = createClaw(s, { x: 0, y: chain.chain.bodies[chain.chain.bodies.length - 1].position.y + 10 }, { upper: s.chain.claw.distance.upper, lower: s.chain.claw.distance.lower });
+    const claw = createClaw(s, { x: 0, y: chain.chain.bodies[chain.chain.bodies.length - 1].position.y + 10 }, { upper: s.chain.claw.distance.upperMax, lower: s.chain.claw.distance.lowerMax,  lowerC: s.chain.claw.distance.lowerMin});
     Composite.add(s.world, Composite.create({
         constraints: [
             Constraint.create({
@@ -195,7 +195,12 @@ export function createChain(s: State, length: number = 300, segmentSize: number 
     chain.label = "chain";
     Composite.translate(chain, { x: s.screen.width / 2, y: 0 });
 
-    const anchor = Bodies.circle(s.screen.width / 2, 0, 10, { label: "anchor", collisionFilter: { mask: 0, category: 0 } });
+    const anchor = Bodies.circle(s.screen.width / 2, 0, 10, {
+        label: "anchor",
+        density: 0.000001,
+        collisionFilter: { mask: 0, category: 0 }
+    }
+    );
     Matter.Body.setStatic(anchor, true);
     const complete = Composite.create({
         bodies: [anchor],
