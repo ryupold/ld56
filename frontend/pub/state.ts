@@ -13,8 +13,9 @@ export const init = createState({
         anchor: <Body><unknown>undefined,
         claw: {
             comp: <Composite><unknown>undefined,
+            clawing: false,
             distance: {
-                upperMin: 60, upperMax: 80, lowerMin: 50, lowerMax: 100,
+                upperMin: 60, upperMax: 80, lowerMin: 10, lowerMax: 100,
                 upperConstraint: <Constraint><unknown>undefined, 
                 lowerConstraint: <Constraint><unknown>undefined,
             }

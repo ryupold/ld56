@@ -7,30 +7,31 @@ import (
 
 	"ryupold/website/loggy"
 	ld56 "ryupold/website/ludumdare/ld56/api"
+	"ryupold/website/ludumdare/ld56/website"
 )
 
-func routes() []Route {
-	return CombineRoutes(
-		[]Route{
-			PreventPathToHaveDotDot,
-			CheckHoldTheLineList,
-			Root,
+func routes() []website.Route {
+	return website.CombineRoutes(
+		[]website.Route{
+			website.PreventPathToHaveDotDot,
+			website.CheckHoldTheLineList,
+			website.Root,
 		},
 
 		ld56.Routes(ld56.APIConfig{
-			DBPath:       Config.DataDirectory + "/ludumdare/ld56/db",
+			DBPath:       website.Config.DataDirectory + "/ludumdare/ld56/db",
 			APIPrefix:    "/ludumdare/ld56",
-			FrontendPath: ProjectRoot + "/modules/ludumdare/ld56/frontend",
-			BackendPath:  ProjectRoot + "/modules/ludumdare/ld56/backend",
+			FrontendPath: website.ProjectRoot + "/modules/ludumdare/ld56/frontend",
+			BackendPath:  website.ProjectRoot + "/modules/ludumdare/ld56/backend",
 		}),
 	)
 }
 
 func main() {
-	loggy.LogDirectory = Config.DataDirectory + "/logs"
-	http.HandleFunc("/", Decide(routes()))
+	loggy.LogDirectory = website.Config.DataDirectory + "/logs"
+	http.HandleFunc("/", website.Decide(routes()))
 
-	defer Cleanup()
+	defer website.Cleanup()
 
 	if len(os.Args) > 1 && os.Args[1] == "debug" {
 		log.Default().Println("start in debug mode")

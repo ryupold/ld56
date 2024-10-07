@@ -17,7 +17,7 @@ export async function initGame(s: State) {
     createHousing(s);
 
     const chain = createChain(s);
-    const claw = createClaw(s, { x: 0, y: chain.chain.bodies[chain.chain.bodies.length - 1].position.y + 10 }, { upper: s.chain.claw.distance.upperMax, lower: s.chain.claw.distance.lowerMax,  lowerC: s.chain.claw.distance.lowerMin});
+    const claw = createClaw(s, { x: 0, y: chain.chain.bodies[chain.chain.bodies.length - 1].position.y + 10 }, { upper: s.chain.claw.distance.upperMax, lower: s.chain.claw.distance.lowerMax});
     Composite.add(s.world, Composite.create({
         constraints: [
             Constraint.create({

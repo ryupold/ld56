@@ -1,5 +1,6 @@
 import { MatterJs } from "./matter.js";
 import { State } from "../state.js";
+import { createCreatureBody } from "./creature.js";
 
 declare var Matter: MatterJs;
 
@@ -9,5 +10,5 @@ export function mouseClick(s: State, e: MouseEvent) {
     const y = e.clientY - rect.top;
     console.log("click", x, y);
 
-    Matter.Composite.add(s.world, Matter.Bodies.rectangle(x, y, 20, 30, {density: 0.00001}));
+    Matter.Composite.add(s.world, createCreatureBody(x,y));
 }
