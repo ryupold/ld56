@@ -12,6 +12,7 @@ export const init = createState({
     world: <World><unknown>undefined,
     
     chain: {
+        moving: true,
         anchor: <Body><unknown>undefined,
         claw: {
             comp: <Composite><unknown>undefined,

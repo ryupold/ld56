@@ -1,5 +1,6 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
+import { CLAW_DENSITY } from "./constants.js";
 import { radians } from "./math.js";
 import { MatterJs, V2, Composite as CompositeType } from "./matter.js";
 
@@ -36,32 +37,6 @@ export async function closeClaw(s: State) {
     s.chain.claw.clawing = false;
 }
 
-export async function moveClaw(s: State, distance: number, time: number = 3000, steps: number = 20) {
-    // const start = s.chain.anchor.position.x;
-    for (let i = 0; i < steps; i++) {
-        Matter.Body.translate(s.chain.anchor, { x: distance / steps, y: 0 });
-        if (s.chain.anchor.position.x <= 0) {
-            s.chain.anchor.position.x = 0;
-            return;
-        }
-        if (s.chain.anchor.position.x >= s.screen.width) {
-            s.chain.anchor.position.x = s.screen.width;
-            return;
-        }
-        await delay(time / steps);
-    }
-}
-
-export async function moveClawVertically(s: State, targetY: number, time: number = 3000, steps: number = 20) {
-    const start = s.chain.anchor.position.y;
-    for (let i = 0; i < steps; i++) {
-        s.chain.anchor.position.y = start + (i / steps) * (targetY - start);
-        if (i + 1 < steps) await delay(time / steps);
-    }
-
-    console.log(s.chain.anchor.position);
-}
-
 export function createClaw(s: State, offset: V2, open: { upper: number, lower: number }) {
     const segmentWidth = 10;
     const segmentHeight = 50;
@@ -82,8 +57,8 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
 
         const options = {
             collisionFilter: { group: seg.group },
-            density: 0.00001,
-            // chamfer: { radius: seg.radius },
+            density: CLAW_DENSITY,
+            chamfer: { radius: segmentWidth/2 }, //TODO: test this
         };
 
         const c1 = Bodies.circle(seg.c1.x, seg.c1.y, seg.radius, options);
@@ -170,13 +145,13 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
     const spacerL = Constraint.create({
         bodyA: tll.comp.bodies[2],
         bodyB: tlu.comp.bodies[0],
-        stiffness: 1,
+        stiffness: 0.7,
         length: segmentHeight*1.8,
     });
     const spacerR = Constraint.create({
         bodyA: trl.comp.bodies[2],
         bodyB: tru.comp.bodies[0],
-        stiffness: 1,
+        stiffness: 0.7,
         length: segmentHeight*1.8,
     });
 

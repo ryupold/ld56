@@ -1,6 +1,7 @@
 import { BUTTON, CANVAS, DIV, H1, MAIN, Vode, resetID } from "./exports.js";
 import { initEngine } from "./game/boot.js";
-import { closeClaw, moveClaw, openClaw, moveClawVertically } from "./game/claw.js";
+import { moveChain, moveChainVertically } from "./game/chain.js";
+import { closeClaw, openClaw } from "./game/claw.js";
 import { State, v } from "./state.js";
 
 export const content = (s: State): Vode<State> => {
@@ -27,10 +28,10 @@ export const content = (s: State): Vode<State> => {
         [DIV, {}, 
             [BUTTON, {onclick: (ss: State, e: Event) => openClaw}, "open"],
             [BUTTON, {onclick: (ss: State, e: Event) => closeClaw}, "close"],
-            [BUTTON, {onclick: (ss: State, e: Event) => moveClaw(ss, -100)}, "<- drive"],
-            [BUTTON, {onclick: (ss: State, e: Event) => moveClaw(ss, 100)}, "drive ->"],
-            [BUTTON, {onclick: (ss: State, e: Event) => moveClawVertically(ss, -300)}, "⬆️"],
-            [BUTTON, {onclick: (ss: State, e: Event) => moveClawVertically(ss, 0)}, "🔽"],
+            [BUTTON, {onclick: (ss: State, e: Event) => moveChain(ss, -100)}, "<- drive"],
+            [BUTTON, {onclick: (ss: State, e: Event) => moveChain(ss, 100)}, "drive ->"],
+            [BUTTON, {onclick: (ss: State, e: Event) => moveChainVertically(ss, -300)}, "⬆️"],
+            [BUTTON, {onclick: (ss: State, e: Event) => moveChainVertically(ss, 0)}, "🔽"],
             [BUTTON, {
                 onclick: () => document.documentElement!.requestFullscreen(),
             }, "fullscreen"]

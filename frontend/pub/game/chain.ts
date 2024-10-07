@@ -1,4 +1,6 @@
+import { delay } from "../exports.js";
 import { State } from "../state.js";
+import { CHAIN_SEGMENT_DENSITY } from "./constants.js";
 import { MatterJs, BodyOptions, Body } from "./matter.js";
 
 declare var Matter: MatterJs;
@@ -9,6 +11,33 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Vector = Matter.Vector;
 
+
+export async function moveChain(s: State, distance: number, time: number = 3000, steps: number = 20) {
+    // const start = s.chain.anchor.position.x;
+    for (let i = 0; i < steps; i++) {
+        Matter.Body.translate(s.chain.anchor, { x: distance / steps, y: 0 });
+        if (s.chain.anchor.position.x <= 0) {
+            s.chain.anchor.position.x = 0;
+            return;
+        }
+        if (s.chain.anchor.position.x >= s.screen.width) {
+            s.chain.anchor.position.x = s.screen.width;
+            return;
+        }
+        await delay(time / steps);
+    }
+}
+
+export async function moveChainVertically(s: State, targetY: number, time: number = 3000, steps: number = 20) {
+    const start = s.chain.anchor.position.y;
+    for (let i = 0; i < steps; i++) {
+        s.chain.anchor.position.y = start + (i / steps) * (targetY - start);
+        if (i + 1 < steps) await delay(time / steps);
+    }
+
+    console.log(s.chain.anchor.position);
+}
+
 /**
  * create a chain hanging from the top fixed by an anchor
  * @param s State
@@ -18,7 +47,10 @@ export function createChain(s: State, length: number = 300, segmentSize: number 
     const segments = Math.floor(length / segmentSize);
 
     let bodies = <Body[]>[];
-    const opt = <BodyOptions>{ collisionFilter: { category: 0, mask: 0 } };
+    const opt = <BodyOptions>{
+        density: CHAIN_SEGMENT_DENSITY,
+        collisionFilter: { category: 0, mask: 0 },
+    };
     for (let i = 0; i < segments; i++) {
         const b = Bodies.circle(0, 0, segmentSize / 2, opt);
         Matter.Body.translate(b, { x: 0, y: i * (segmentSize + 1) });
@@ -33,7 +65,6 @@ export function createChain(s: State, length: number = 300, segmentSize: number 
 
     const anchor = Bodies.circle(s.screen.width / 2, 0, 10, {
         label: "anchor",
-        density: 0.000001,
         collisionFilter: { mask: 0, category: 0 }
     }
     );
