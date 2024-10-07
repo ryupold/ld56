@@ -1,0 +1,3 @@
+export const CREATURE_DENSITY = 0.000001;
+export const CLAW_DENSITY = 0.000001;
+export const CHAIN_SEGMENT_DENSITY = 0.000001;
