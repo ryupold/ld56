@@ -7,18 +7,19 @@ import { Image } from "./game/p5.js";
 export const init = createState({
     route: route(window.location),
 
-    screen: { width: 600, height: 400 },
+    screen: { width: document.documentElement.clientWidth, height: document.documentElement.clientWidth / 16 * 9 },
 
     world: <World><unknown>undefined,
     
     chain: {
-        moving: true,
+        verticalMin: 0,
+        verticalMax: 0,
+        moving: false,
         anchor: <Body><unknown>undefined,
         claw: {
             comp: <Composite><unknown>undefined,
             clawing: false,
             distance: {
-                upperMin: 60, upperMax: 80, lowerMin: 10, lowerMax: 100,
                 upperConstraint: <Constraint><unknown>undefined, 
                 lowerConstraint: <Constraint><unknown>undefined,
             }
@@ -26,7 +27,7 @@ export const init = createState({
 
     },
 
-    drawModels: <Model[]>[],
+    models: <Model[]>[],
     images: {
         creatures: <Image[]>[],
     },

@@ -26,6 +26,7 @@ export type World = {};
 export type CompositeModule = {
     add: (composite: Composite | World, object: Composite | Body | Constraint | Composite[] | Body[] | Constraint[]) => void;
     create: (options: { label?: string, bodies?: Body[], composites?: Composite[], constraints?: Constraint[] }) => Composite;
+    remove: (composite: Composite | World, object: Composite | Body | Constraint | Composite[] | Body[] | Constraint[]) => Composite
 
     rotate: (comp: Composite, rotation: number, point: V2, recursive?: boolean) => void;
     scale: (comp: Composite, scaleX: number, scaleY: number, point: V2, recursive?: boolean) => void;

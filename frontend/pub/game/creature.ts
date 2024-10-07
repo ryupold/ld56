@@ -1,8 +1,15 @@
+import { State } from "../state.js";
 import { Body, BodyOptions, MatterJs } from "./matter.js";
+import { ModelType } from "./model.js";
 
 export type Creature = {};
 
 declare var Matter: MatterJs;
+
+let lastCreatureID = 0;
+export function newCreatureID(): number {
+    return ++lastCreatureID;
+}
 
 export function createCreatureBody(x: number, y: number) {
     const bodyRadius = Matter.Common.random(10, 20);
@@ -30,12 +37,28 @@ export function createCreatureBody(x: number, y: number) {
             }),
             ...limbs,
         ],
-        friction: 0.1,
-        restitution: 0.6,
+        friction: 0.6,
+        restitution: 0.7,
         slop: 0.5,
     });
 
-    // body.angle = Matter.Common.random(0, Math.PI * 2);
+    body.angle = Matter.Common.random(-0.2, 0.2);
 
     return {body, bodyRadius, limbRadius};
+}
+
+
+export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, spawnW: number, spawnH: number){
+    const x = Matter.Common.random(spawnX, spawnX + spawnW);
+    const y = Matter.Common.random(spawnY, spawnY + spawnH);
+
+    const creature = createCreatureBody(x, y);
+    Matter.Composite.add(s.world, creature.body);
+    s.models.push({
+        id: newCreatureID(),
+        type: ModelType.Creature,
+        body: creature.body,
+        w: creature.bodyRadius, h: creature.bodyRadius,
+        img: Matter.Common.choose(s.images.creatures),
+    });
 }

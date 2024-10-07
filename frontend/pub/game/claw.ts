@@ -1,6 +1,6 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
-import { CLAW_DENSITY } from "./constants.js";
+import { CLAW_DENSITY, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_LOWER_MIN, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_UPPER_MIN } from "./constants.js";
 import { radians } from "./math.js";
 import { MatterJs, V2, Composite as CompositeType } from "./matter.js";
 
@@ -26,14 +26,14 @@ async function clawGrab(s: State, startU: number, startL: number, targetU: numbe
 export async function openClaw(s: State) {
     if(s.chain.claw.clawing) return;
     s.chain.claw.clawing = true;
-    await clawGrab(s, s.chain.claw.distance.upperMin, s.chain.claw.distance.lowerMin, s.chain.claw.distance.upperMax, s.chain.claw.distance.lowerMax);
+    await clawGrab(s, CLAW_SEPERATOR_UPPER_MIN, CLAW_SEPERATOR_LOWER_MIN, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_LOWER_MAX);
     s.chain.claw.clawing = false;
 }
 
 export async function closeClaw(s: State) {
     if(s.chain.claw.clawing) return;
     s.chain.claw.clawing = true;
-    await clawGrab(s, s.chain.claw.distance.upperMax, s.chain.claw.distance.lowerMax, s.chain.claw.distance.upperMin, s.chain.claw.distance.lowerMin);
+    await clawGrab(s, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MIN, CLAW_SEPERATOR_LOWER_MIN);
     s.chain.claw.clawing = false;
 }
 

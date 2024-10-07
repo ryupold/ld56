@@ -1,6 +1,6 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
-import { CHAIN_SEGMENT_DENSITY } from "./constants.js";
+import { CHAIN_SEGMENT_DENSITY, CHAIN_SEGMENT_SIZE } from "./constants.js";
 import { MatterJs, BodyOptions, Body } from "./matter.js";
 
 declare var Matter: MatterJs;
@@ -29,13 +29,23 @@ export async function moveChain(s: State, distance: number, time: number = 3000,
 }
 
 export async function moveChainVertically(s: State, targetY: number, time: number = 3000, steps: number = 20) {
+    if(s.chain.moving) return;
+
+    s.chain.moving = true;
     const start = s.chain.anchor.position.y;
     for (let i = 0; i < steps; i++) {
-        s.chain.anchor.position.y = start + (i / steps) * (targetY - start);
+        Matter.Body.setPosition(
+            s.chain.anchor,
+            {
+                x: s.chain.anchor.position.x,
+                y: start + (i / steps) * (targetY - start)
+            }
+        );
         if (i + 1 < steps) await delay(time / steps);
     }
-
-    console.log(s.chain.anchor.position);
+    s.chain.moving = false;
+    
+    console.log("moved chain to", s.chain.anchor.position);
 }
 
 /**
@@ -43,7 +53,15 @@ export async function moveChainVertically(s: State, targetY: number, time: numbe
  * @param s State
  * @returns (chain composite, anchor body)
  */
-export function createChain(s: State, length: number = 300, segmentSize: number = 10) {
+export function createChain(s: State) {
+    //calculate vertical min and max chain position
+    s.chain.verticalMin = -s.screen.height * 1.25;
+    s.chain.verticalMax = -s.screen.height / 2.5;
+
+    console.log(s.chain);
+
+    const segmentSize = CHAIN_SEGMENT_SIZE;
+    const length = s.screen.height;
     const segments = Math.floor(length / segmentSize);
 
     let bodies = <Body[]>[];
