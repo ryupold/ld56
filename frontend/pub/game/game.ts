@@ -82,11 +82,13 @@ function createClaw(s: State, offset: V2, open: { upper: number, lower: number }
                     bodyA: c1,
                     bodyB: rect,
                     pointB: seg.c1,
+                    stiffness: 1,
                 }),
                 Constraint.create({
                     bodyA: c2,
                     bodyB: rect,
                     pointB: seg.c2,
+                    stiffness: 1,
                 }),
             ]
         });
@@ -145,6 +147,18 @@ function createClaw(s: State, offset: V2, open: { upper: number, lower: number }
         stiffness: 1,
         length: open.lower,
     });
+    const spacerL = Constraint.create({
+        bodyA: tll.comp.bodies[2],
+        bodyB: tlu.comp.bodies[0],
+        stiffness: 1,
+        length: segmentHeight*1.8,
+    });
+    const spacerR = Constraint.create({
+        bodyA: trl.comp.bodies[2],
+        bodyB: tru.comp.bodies[0],
+        stiffness: 1,
+        length: segmentHeight*1.8,
+    });
 
     const claw = Composite.create({
         composites: [clawLeft, clawRight],
@@ -160,7 +174,11 @@ function createClaw(s: State, offset: V2, open: { upper: number, lower: number }
             distanceKeeperUpper,
 
             //distance at the bottom of the claw
-            distanceKeeperLower
+            distanceKeeperLower,
+
+            //spacers
+            spacerL,
+            spacerR,
         ]
     });
 

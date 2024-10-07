@@ -15,7 +15,6 @@ export function createCreatureBody(x: number, y: number) {
     for (let i = 0; i < 5; i++) {
         let direction = Matter.Vector.rotate({ x: 1, y: 0 }, i * (Math.PI*2 / 5));
         direction = Matter.Vector.mult(direction, bodyRadius + limbRadius*3);
-        console.log(direction);
         limbs.push(
             Matter.Bodies.circle(x + direction.x, y + direction.y, limbRadius, {
                 collisionFilter: { group },

@@ -21,7 +21,8 @@ export const content = (s: State): Vode<State> => {
             },
             onclick: (ss: State, e: Event) => {
                 s.events.onClick.forEach(c => c(s, e as MouseEvent));
-            }
+            },
+
         }],
         [DIV, {}, 
             [BUTTON, {onclick: (ss: State, e: Event) => openClaw}, "open"],
