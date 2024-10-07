@@ -1,22 +1,32 @@
 declare var p5: any;
 
 export function initP5(
+    preloadFn: (r: Sketch) => void,
     setupFn: (r: Sketch) => void,
     drawFn: (r: Sketch) => void,
 ) {
     new p5((sketch: Sketch) => {
+        (<any>sketch).preload = preloadFn.bind(null, sketch);
         (<any>sketch).setup = setupFn.bind(null, sketch);
         (<any>sketch).draw = drawFn.bind(null, sketch);
     });
 }
 
+export type Image = {
+    width: number;
+    height: number;
+    pixels: [number, number, number, number][];
+};
+
 /** https://p5js.org/reference/ */
 export type Sketch = {
     //canvas 
-    createCanvas: ((width: number, height: number, renderer?: "P2D" | "WEBGL", canvas?: HTMLCanvasElement) => void) | ((width: number, height: number, canvas?: HTMLCanvasElement) => void);
+    createCanvas: ((width: number, height: number, canvas?: HTMLCanvasElement) => void);
+    // | ((width: number, height: number, renderer?: "P2D" | "WEBGL", canvas?: HTMLCanvasElement) => void);
     resizeCanvas: (w: number, h: number) => void;
 
     //color
+    clear: () => void;
     background: (...colorArgs: any[]) => void;
     fill: (...colorArgs: any[]) => void;
     stroke: (...colorArgs: any[]) => void;
@@ -31,14 +41,18 @@ export type Sketch = {
     rect: ((x: number, y: number, w: number, h?: number, tl?: number, tr?: number, br?: number, bl?: number) => void) | ((x: number, y: number, w: number, h?: number, detailX?: number, detailY?: number) => void);
 
     //images
-    image: ((img: any, destX: number, destY: number, destW: number, destH: number, srcX: number, srcY: number, srcW?: number, srcH?: number, fit?: "CONTAIN" | "COVER", xAlign?: "LEFT" | "RIGHT" | "CENTER", yAlign?: "TOP" | "BOTTOM" | "CENTER") => void) | ((img: any, x: number, y: number, w?: number, h?: number) => void);
-    imageMode: (mode: "CORNER" | "CORNERS" | "CENTER") => void;
-    loadImage: (path: string, success?: () => void, error?: (err: any) => void) => void;
-    saveGif: (file: string, duration: number, options?: {delay?: number, units?: "seconds" | "frames", silent?: boolean, notificationDuration?: number, 
-        /** default: 'progressBar' */ notificationID?: string}) => void
+    image: (img: any, destX: number, destY: number, destW: number, destH: number, srcX?: number, srcY?: number, srcW?: number, srcH?: number, fit?: "CONTAIN" | "COVER", xAlign?: "LEFT" | "RIGHT" | "CENTER", yAlign?: "TOP" | "BOTTOM" | "CENTER") => void;
+    imageMode: (mode: any) => void;
+    loadImage: (path: string, success?: () => void, error?: (err: any) => void) => Image;
+    saveGif: (file: string, duration: number, options?: {
+        delay?: number, units?: "seconds" | "frames", silent?: boolean, notificationDuration?: number,
+        /** default: 'progressBar' */ notificationID?: string
+    }) => void
 
     //transforms
-    translate: (x: number, y: number, z?: number) => void;
+    push: () => void;
+    pop: () => void;
+    translate: (x: number, y?: number, z?: number) => void;
     rotate: (angle: number, axis?: any) => void;
     scale: (x: number, y?: number, z?: number) => void;
     applyMatrix: () => void;
@@ -58,6 +72,8 @@ export type Sketch = {
     radians: (degrees: number) => number;
 
     //hardware
+    frameCount: number;
+    frameRate: (fps?: number) => number;
     mouseX: number;
     mouseY: number;
     pmouseX: number;
@@ -66,7 +82,13 @@ export type Sketch = {
     mouseButton: string;
     /** https://p5js.org/reference/p5/requestPointerLock/ */
     requestPointerLock: () => void;
-    touches: {x: number, y: number}[];
+    touches: { x: number, y: number }[];
+
+    //constants
+    PI: number;
+    CENTER: number;
+    CORNER: number;
+    CORNERS: number;
 };
 
 export type P5Vector = {

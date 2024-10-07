@@ -1,6 +1,8 @@
 import { createState, route, vode, Patch, Effect } from "./exports.js";
 import { mouseClick } from "./game/click.js";
 import { World, Body, Mouse, Composite, Constraint } from "./game/matter.js";
+import { Model } from "./game/model.js";
+import { Image } from "./game/p5.js";
 
 export const init = createState({
     route: route(window.location),
@@ -21,6 +23,11 @@ export const init = createState({
             }
         },
 
+    },
+
+    drawModels: <Model[]>[],
+    images: {
+        creatures: <Image[]>[],
     },
 
     game: {

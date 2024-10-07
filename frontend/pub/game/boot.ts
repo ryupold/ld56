@@ -2,24 +2,44 @@ import { State } from "../state.js";
 import { initP5, Sketch } from "./p5.js";
 import { MatterJs } from "./matter.js";
 import { initGame } from "./game.js";
+import { draw } from "./render.js";
+import { PREFIX } from "../api/prefix.js";
 
 declare var Matter: MatterJs;
+const tickRate = 60;
 
-function setup(r: Sketch) {
-    r.createCanvas(600, 480);
+function preload(s: State) {
+    return function (r: Sketch) {
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster001.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster002.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster003.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster004.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster005.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster006.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster007.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster008.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster009.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster010.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster011.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster012.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster013.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster014.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster015.png`));
+        s.images.creatures.push(r.loadImage(`${PREFIX}/pub/assets/img/creatures/monster016.png`));
+    }
 }
 
-function draw(r: Sketch) {
-    r.background(0);
-
-    r.fill(250, 100, 100);
-    r.rect(20, 20, 60);
+function setup(s: State, c: HTMLCanvasElement) {
+    return function (r: Sketch) {
+        r.frameRate(tickRate);
+        r.createCanvas(s.screen.width, s.screen.height, c);
+    }
 }
 
 export function initEngine(s: State, canvas: HTMLCanvasElement) {
-    // initP5(setup, draw);
+    initP5(preload(s), setup(s, canvas), draw(s));
 
-    const engine = Matter.Engine.create();    
+    const engine = Matter.Engine.create();
     const render = Matter.Render.create({
         element: document.body,
         engine: engine,
@@ -40,7 +60,7 @@ export function initEngine(s: State, canvas: HTMLCanvasElement) {
 
     const runner = Matter.Runner.create({
         //defaults:
-        // delta: 1000 / 60,
+        delta: 1000 / tickRate,
         // frameDelta: null,
         // frameDeltaSmoothing: true,
         // frameDeltaSnapping: true,

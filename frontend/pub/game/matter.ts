@@ -7,6 +7,7 @@ export type MatterJs = {
     Engine: EngineModule,
     Body: BodyModule,
     Bodies: BodiesModule,
+    Common: CommonModule,
     Composite: CompositeModule,
     Composites: CompositesModule,
     Constraint: ConstraintModule,
@@ -219,3 +220,11 @@ export type Mouse = {
     x: number,
     y: number,
 };
+
+export type CommonModule = {
+    choose: <T>(choises: T[]) => T;
+    clamp: (v: number, min: number, max: number) => number;
+    sign: (v: number) => number;
+    random: (min: number, max: number) => number;
+    shuffle: <T>(list: T[]) => T[]
+}
