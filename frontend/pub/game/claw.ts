@@ -1,8 +1,10 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
 import { CLAW_DENSITY, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_LOWER_MIN, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_UPPER_MIN } from "./constants.js";
+import { newModelID } from "./creature.js";
 import { radians } from "./math.js";
 import { MatterJs, V2, Composite as CompositeType } from "./matter.js";
+import { ModelType } from "./model.js";
 
 declare var Matter: MatterJs;
 const Engine = Matter.Engine,
@@ -86,6 +88,27 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
                     stiffness: 1,
                 }),
             ]
+        });
+        s.models.push({
+            id: newModelID(),
+            type: ModelType.Claw,
+            body: c1,
+            img: s.images.claw.clawBolt,
+            w: segmentWidth, h: segmentWidth
+        });
+        s.models.push({
+            id: newModelID(),
+            type: ModelType.Claw,
+            body: rect,
+            img: s.images.claw.clawSegment,
+            w: segmentWidth, h: segmentHeight
+        });
+        s.models.push({
+            id: newModelID(),
+            type: ModelType.Claw,
+            body: c1,
+            img: s.images.claw.clawBolt,
+            w: segmentWidth, h: segmentWidth
         });
         return seg;
     }

@@ -6,9 +6,9 @@ export type Creature = {};
 
 declare var Matter: MatterJs;
 
-let lastCreatureID = 0;
-export function newCreatureID(): number {
-    return ++lastCreatureID;
+let lastModelID = 0;
+export function newModelID(): number {
+    return ++lastModelID;
 }
 
 export function createCreatureBody(x: number, y: number) {
@@ -55,10 +55,10 @@ export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, sp
     const creature = createCreatureBody(x, y);
     Matter.Composite.add(s.world, creature.body);
     s.models.push({
-        id: newCreatureID(),
+        id: newModelID(),
         type: ModelType.Creature,
         body: creature.body,
-        w: creature.bodyRadius, h: creature.bodyRadius,
+        w: creature.bodyRadius * 4, h: creature.bodyRadius * 4,
         img: Matter.Common.choose(s.images.creatures),
     });
 }

@@ -10,4 +10,7 @@ export type Model = {
     img: Image,
     w: number,
     h: number,
+    // offsetX?: number,
+    // offsetY?: number,
+    // offsetAngle?: number,
 }

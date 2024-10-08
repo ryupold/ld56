@@ -33,7 +33,21 @@ export const init = createState({
 
     models: <Model[]>[],
     images: {
+        common: {
+            background: <Image><unknown>undefined,
+        },
         creatures: <Image[]>[],
+        claw: {
+            clawSegment: <Image><unknown>undefined,
+            clawBolt: <Image><unknown>undefined,
+            chainSegment: <Image><unknown>undefined,
+        },
+        housing: {
+            floor: <Image><unknown>undefined,
+            left: <Image><unknown>undefined,
+            middle: <Image><unknown>undefined,
+            right: <Image><unknown>undefined,
+        },
     },
 
     game: {

@@ -49,7 +49,6 @@ export const content = (s: State): Vode<State> => {
             // },
         }],
         [DIV, { id: 'game-hud' },
-
             [BUTTON, {
                 class: 'start-button',
                 onclick: async (ss: State, e: Event) => {

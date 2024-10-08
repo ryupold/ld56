@@ -1,6 +1,6 @@
 import { MatterJs } from "./matter.js";
 import { State } from "../state.js";
-import { createCreatureBody, newCreatureID } from "./creature.js";
+import { createCreatureBody, newModelID } from "./creature.js";
 import { Image } from "./p5.js";
 import { ModelType } from "./model.js";
 
@@ -15,7 +15,7 @@ export function mouseClick(s: State, e: MouseEvent) {
     const creature = createCreatureBody(x, y);
     Matter.Composite.add(s.world, creature.body);
     s.models.push({
-        id: newCreatureID(),
+        id: newModelID(),
         type: ModelType.Creature,
         body: creature.body,
         w: creature.bodyRadius, h: creature.bodyRadius,

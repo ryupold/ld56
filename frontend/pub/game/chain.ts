@@ -1,7 +1,9 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
 import { CHAIN_SEGMENT_DENSITY, CHAIN_SEGMENT_SIZE } from "./constants.js";
+import { newModelID } from "./creature.js";
 import { MatterJs, BodyOptions, Body } from "./matter.js";
+import { ModelType } from "./model.js";
 
 declare var Matter: MatterJs;
 const Engine = Matter.Engine,
@@ -110,6 +112,13 @@ export function createChain(s: State) {
         const b = Bodies.circle(0, 0, segmentSize / 2, opt);
         Matter.Body.translate(b, { x: 0, y: i * (segmentSize + 1) });
         bodies.push(b);
+        s.models.push({
+            id: newModelID(),
+            type: ModelType.ChainSegment,
+            body: b,
+            img: s.images.claw.chainSegment,
+            w: segmentSize, h: segmentSize,
+        });
     }
     const chain = Composites.chain(Composite.create({ bodies }), 0, 0, 0, 0, {
         length: segmentSize + 1,

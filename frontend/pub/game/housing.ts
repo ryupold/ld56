@@ -1,5 +1,7 @@
 import { State } from "../state.js";
+import { newModelID } from "./creature.js";
 import { BodyOptions, MatterJs } from "./matter.js";
+import { ModelType } from "./model.js";
 
 declare var Matter: MatterJs;
 const Engine = Matter.Engine,
@@ -23,6 +25,13 @@ export function createHousing(s: State) {
         floorWidth, floorHeight, housingMaterial);
     Matter.Body.setStatic(floor, true);
     Composite.add(s.world, floor);
+    s.models.push({
+        id: newModelID(),
+        type: ModelType.Housing,
+        body: floor,
+        img: s.images.housing.floor,
+        w: floorWidth, h: floorHeight
+    });
 
     const leftWall = Bodies.rectangle(
         wallThickness / 2,
@@ -30,6 +39,13 @@ export function createHousing(s: State) {
         wallThickness, s.screen.height, housingMaterial);
     Matter.Body.setStatic(leftWall, true);
     Composite.add(s.world, leftWall);
+    s.models.push({
+        id: newModelID(),
+        type: ModelType.Housing,
+        body: leftWall,
+        img: s.images.housing.left,
+        w: wallThickness, h: s.screen.height
+    });
 
     const rightSmallWall = Bodies.rectangle(
         floorWidth + wallThickness / 2,
@@ -39,6 +55,13 @@ export function createHousing(s: State) {
         housingMaterial);
     Matter.Body.setStatic(rightSmallWall, true);
     Composite.add(s.world, rightSmallWall);
+    s.models.push({
+        id: newModelID(),
+        type: ModelType.Housing,
+        body: rightSmallWall,
+        img: s.images.housing.middle,
+        w: wallThickness, h: s.screen.height / 3
+    });
 
     const rightWall = Bodies.rectangle(
         s.screen.width - wallThickness / 2,
@@ -46,4 +69,11 @@ export function createHousing(s: State) {
         wallThickness, s.screen.height, housingMaterial);
     Matter.Body.setStatic(rightWall, true);
     Composite.add(s.world, rightWall);
+    s.models.push({
+        id: newModelID(),
+        type: ModelType.Housing,
+        body: rightWall,
+        img: s.images.housing.right,
+        w: wallThickness, h: s.screen.height
+    });
 }

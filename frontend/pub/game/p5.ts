@@ -48,6 +48,8 @@ export type Sketch = {
         delay?: number, units?: "seconds" | "frames", silent?: boolean, notificationDuration?: number,
         /** default: 'progressBar' */ notificationID?: string
     }) => void
+    tint: (v: number | string | number[], v2?: number, v3?: number, alpha?: number) => void;
+    noTint: () => void;
 
     //transforms
     push: () => void;
