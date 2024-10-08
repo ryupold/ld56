@@ -41,7 +41,7 @@ export async function closeClaw(s: State) {
 
 export function createClaw(s: State, offset: V2, open: { upper: number, lower: number }) {
     const segmentWidth = 10;
-    const segmentHeight = 70;
+    const segmentHeight = 60;
     /** (c1)
      *  |re|
      *  |ct|
@@ -60,7 +60,7 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
         const options = <BodyOptions>{
             collisionFilter: { group: seg.group },
             density: CLAW_DENSITY,
-            friction: 0.9,
+            friction: 0.1,
             // chamfer: { radius: segmentWidth/2 }, //TODO: test this
         };
 
@@ -157,19 +157,19 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
     const distanceKeeperUpper = Constraint.create({
         bodyA: tlu.comp.bodies[2],
         bodyB: tru.comp.bodies[2],
-        stiffness: 1,
+        stiffness: 0.7,
         length: open.upper,
     });
     const distanceKeeperLower = Constraint.create({
         bodyA: tll.comp.bodies[2],
         bodyB: trl.comp.bodies[2],
-        stiffness: 1,
+        stiffness: 0.2,
         length: open.lower,
     });
     const spacerL = Constraint.create({
         bodyA: tll.comp.bodies[2],
         bodyB: tlu.comp.bodies[0],
-        stiffness: 0.7,
+        stiffness: 0.6,
         length: segmentHeight*2,
     });
     const spacerR = Constraint.create({

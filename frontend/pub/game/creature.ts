@@ -12,8 +12,8 @@ export function newModelID(): number {
 }
 
 export function createCreatureBody(x: number, y: number) {
-    const bodyRadius = Matter.Common.random(8, 17);
-    const limbRadius = Matter.Common.random(3, 5);
+    const bodyRadius = Matter.Common.random(10, 20);
+    const limbRadius = Matter.Common.random(1, 3);
     const group = Matter.Body.nextGroup(true);
 
     const limbs = <Body[]>[];
@@ -38,8 +38,8 @@ export function createCreatureBody(x: number, y: number) {
             ...limbs,
         ],
         friction: 0.9,
-        restitution: 0.6,
-        // slop: 2,
+        restitution: 0,
+        slop: 0.5,
     });
 
     body.angle = Matter.Common.random(-0.2, 0.2);
@@ -58,7 +58,7 @@ export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, sp
         id: newModelID(),
         type: ModelType.Creature,
         body: creature.body,
-        w: creature.bodyRadius * 4, h: creature.bodyRadius * 4,
+        w: creature.bodyRadius * 3.5, h: creature.bodyRadius * 3.5,
         img: Matter.Common.choose(s.images.creatures),
     });
 }
