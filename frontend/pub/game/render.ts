@@ -7,8 +7,9 @@ import { Sketch } from "./p5.js";
 export function draw(s: State) {
     return function (r: Sketch) {
         update(s, r);
-        //background
         r.background(0, 0, 0, 0);
+        // return;
+        //background
         r.imageMode(r.CORNER);
         r.tint(255, 128);
         r.image(s.images.common.background, 0, 0, s.screen.width, s.screen.height);

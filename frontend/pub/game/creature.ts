@@ -37,9 +37,9 @@ export function createCreatureBody(x: number, y: number) {
             }),
             ...limbs,
         ],
-        friction: 0.6,
+        friction: 0.9,
         restitution: 0.6,
-        slop: 0.5,
+        // slop: 2,
     });
 
     body.angle = Matter.Common.random(-0.2, 0.2);

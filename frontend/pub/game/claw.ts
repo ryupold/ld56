@@ -3,7 +3,7 @@ import { State } from "../state.js";
 import { CLAW_DENSITY, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_LOWER_MIN, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_UPPER_MIN } from "./constants.js";
 import { newModelID } from "./creature.js";
 import { radians } from "./math.js";
-import { MatterJs, V2, Composite as CompositeType } from "./matter.js";
+import { MatterJs, V2, Composite as CompositeType, BodyOptions } from "./matter.js";
 import { ModelType } from "./model.js";
 
 declare var Matter: MatterJs;
@@ -41,7 +41,7 @@ export async function closeClaw(s: State) {
 
 export function createClaw(s: State, offset: V2, open: { upper: number, lower: number }) {
     const segmentWidth = 10;
-    const segmentHeight = 50;
+    const segmentHeight = 70;
     /** (c1)
      *  |re|
      *  |ct|
@@ -57,10 +57,11 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
             c2: <V2>{ x: 0, y: segmentHeight / 2 },
         };
 
-        const options = {
+        const options = <BodyOptions>{
             collisionFilter: { group: seg.group },
             density: CLAW_DENSITY,
-            chamfer: { radius: segmentWidth/2 }, //TODO: test this
+            friction: 0.9,
+            // chamfer: { radius: segmentWidth/2 }, //TODO: test this
         };
 
         const c1 = Bodies.circle(seg.c1.x, seg.c1.y, seg.radius, options);
@@ -106,7 +107,7 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
         s.models.push({
             id: newModelID(),
             type: ModelType.Claw,
-            body: c1,
+            body: c2,
             img: s.images.claw.clawBolt,
             w: segmentWidth, h: segmentWidth
         });
@@ -169,13 +170,13 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
         bodyA: tll.comp.bodies[2],
         bodyB: tlu.comp.bodies[0],
         stiffness: 0.7,
-        length: segmentHeight*1.8,
+        length: segmentHeight*2,
     });
     const spacerR = Constraint.create({
         bodyA: trl.comp.bodies[2],
         bodyB: tru.comp.bodies[0],
         stiffness: 0.7,
-        length: segmentHeight*1.8,
+        length: segmentHeight*2,
     });
 
     const claw = Composite.create({

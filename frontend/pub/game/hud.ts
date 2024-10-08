@@ -27,11 +27,11 @@ export function updateHUD(s: State, r: Sketch) {
             if (s.chain.anchor.position.x - border.min < border.min) {
                 s.game.state = 'movingBack';
             }
-            else if (!s.chain.movingVertically) s.patch(moveChain(s, -CHAIN_MOVEMENT_DELTA, 1000));
+            else if (!s.chain.movingVertically) s.patch(moveChain(s, -CHAIN_MOVEMENT_DELTA, 800));
         }
         if (s.game.state === 'movingBack') {
             // const border = chainPositionBorder(s);
-            if (!s.chain.movingVertically) s.patch(moveChain(s, CHAIN_MOVEMENT_DELTA, 1000));
+            if (!s.chain.movingVertically) s.patch(moveChain(s, CHAIN_MOVEMENT_DELTA, 800));
         }
     } else {
         s.hud.clawButton.pressed = false;
