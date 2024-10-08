@@ -1,11 +1,10 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
-import { createChain, moveChainHorizontally, moveChainVertically } from "./chain.js";
-import { createClaw } from "./claw.js";
-import { CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MAX } from "./constants.js";
+import { chainPositionBorder, createChain, moveChain, moveChainHorizontally, moveChainVertically } from "./chain.js";
+import { closeClaw, createClaw, openClaw } from "./claw.js";
+import { CHAIN_MOVEMENT_DELTA, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MAX } from "./constants.js";
 import { spawnCreatureInRect } from "./creature.js";
 import { createHousing, housingFloorWidth } from "./housing.js";
-import { updateHUD } from "./hud.js";
 import { MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
 import { Sketch } from "./p5.js";
@@ -55,6 +54,47 @@ export async function initGame(s: State) {
     s.hud.clawButton.visible = true;
 }
 
+export function clawMovementAndUpdateHUD(s: State, r: Sketch) {
+    if (r.mouseIsPressed && r.mouseX > s.hud.clawButton.x && r.mouseX < s.hud.clawButton.x + s.hud.clawButton.w && r.mouseY > s.hud.clawButton.y && r.mouseY < s.hud.clawButton.y + s.hud.clawButton.h && s.hud.clawButton.visible) {
+        s.hud.clawButton.pressed = true;
+        if (s.game.state === 'idle') {
+            s.game.state = 'movingForward';
+        }
+        if (s.game.state === 'movingForward') {
+            const border = chainPositionBorder(s);
+            if (s.chain.anchor.position.x - border.min < border.min) {
+                s.game.state = 'movingBack';
+            }
+            else if (!s.chain.movingVertically) s.patch(moveChain(s, -CHAIN_MOVEMENT_DELTA, 800));
+        }
+        if (s.game.state === 'movingBack') {
+            const border = chainPositionBorder(s);
+            if (s.chain.anchor.position.x - border.min > border.max) {
+                s.game.state = 'movingForward';
+            }
+            else if (!s.chain.movingVertically) s.patch(moveChain(s, CHAIN_MOVEMENT_DELTA, 800));
+        }
+    } else {
+        s.hud.clawButton.pressed = false;
+        if (s.game.state === 'movingForward' || s.game.state === 'movingBack') {
+            s.game.state = 'dropping';
+            s.hud.clawButton.visible = false;
+            s.patch(async () => {
+                await moveChainVertically(s, s.chain.verticalMax, 3000);
+                await closeClaw(s);
+                s.game.state = 'pulling';
+                await moveChainVertically(s, s.chain.verticalMin, 3000);
+                s.game.state = 'returning';
+                await moveChainHorizontally(s, initialChainPosition(s));
+                await delay(500);
+                await openClaw(s);
+                s.game.state = 'idle';
+                s.hud.clawButton.visible = true;
+            });
+        }
+    }
+}
+
 export function initialChainPosition(s: State) {
     return s.screen.width - (s.screen.width - housingFloorWidth(s)) / 2;
 }
@@ -62,7 +102,7 @@ export function initialChainPosition(s: State) {
 export function update(s: State, r: Sketch) {
     checkForGrabbedCreatures(s);
 
-    updateHUD(s, r);
+    clawMovementAndUpdateHUD(s, r);
 }
 
 function checkForGrabbedCreatures(s: State) {
