@@ -1,12 +1,14 @@
 import { delay } from "../exports.js";
 import { State } from "../state.js";
-import { createChain, moveChainVertically } from "./chain.js";
+import { createChain, moveChainHorizontally, moveChainVertically } from "./chain.js";
 import { createClaw } from "./claw.js";
 import { CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MAX } from "./constants.js";
 import { spawnCreatureInRect } from "./creature.js";
 import { createHousing, housingFloorWidth } from "./housing.js";
+import { updateHUD } from "./hud.js";
 import { MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
+import { Sketch } from "./p5.js";
 
 declare var Matter: MatterJs;
 const Engine = Matter.Engine,
@@ -34,21 +36,33 @@ export async function initGame(s: State) {
     s.chain.claw.comp = claw.claw;
     s.chain.claw.distance.upperConstraint = claw.distance.upper;
     s.chain.claw.distance.lowerConstraint = claw.distance.lower;
-    s.patch(moveChainVertically(s, s.chain.verticalMin));
-    await delay(1000);
+
+    const resetTime = 3000;
+    s.patch(moveChainVertically(s, s.chain.verticalMin, resetTime));
+    s.patch(moveChainHorizontally(s, initialChainPosition(s)));
+    await delay(resetTime);
     //----------------------------
-    
-    
+
+
     //--- spawn creatures --------
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 40; i++) {
         await delay(50);
-        spawnCreatureInRect(s, 50, s.screen.height - s.screen.height/3-100, housingFloorWidth(s) - 50, s.screen.height/3 - 100);
+        spawnCreatureInRect(s, 50, s.screen.height - s.screen.height / 3 - 100, housingFloorWidth(s) - 50, s.screen.height / 3 - 100);
     }
     //----------------------------
+
+
+    s.hud.clawButton.visible = true;
 }
 
-export function update(s: State) {
+export function initialChainPosition(s: State) {
+    return s.screen.width - (s.screen.width - housingFloorWidth(s)) / 2;
+}
+
+export function update(s: State, r: Sketch) {
     checkForGrabbedCreatures(s);
+
+    updateHUD(s, r);
 }
 
 function checkForGrabbedCreatures(s: State) {
@@ -57,5 +71,12 @@ function checkForGrabbedCreatures(s: State) {
         Matter.Composite.remove(s.world, model.body);
         s.models.splice(s.models.indexOf(model), 1);
         console.log(`grabbed creature #${model.id}`);
+        s.game.score += 1;
+        s.hud.score.visible = s.game.score > 0;
     }
+}
+
+
+export async function* goClaw(s: State) {
+
 }

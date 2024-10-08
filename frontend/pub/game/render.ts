@@ -1,11 +1,12 @@
 import { State } from "../state.js";
 import { update } from "./game.js";
+import { drawHUD } from "./hud.js";
 import { Composite } from "./matter.js";
 import { Sketch } from "./p5.js";
 
 export function draw(s: State) {
     return function (r: Sketch) {
-        update(s);
+        update(s, r);
         r.background(0, 0, 0, 0);
 
         for (const model of s.models) {
@@ -19,5 +20,6 @@ export function draw(s: State) {
             r.pop();
         }
 
+        drawHUD(s, r);
     }
 }

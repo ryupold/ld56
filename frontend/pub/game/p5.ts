@@ -61,6 +61,14 @@ export type Sketch = {
     //text
     textSize: (s: number) => void;
     text: (text: string, x: number, y: number, maxW?: number, maxH?: number) => void;
+    textAlign: (horizAlign?: any, vertAlign?: any) => any;
+    textWrap: (style: any) => void;
+    textWidth: (str: string) => number;
+    textAscent: () => number;
+    textDescent: () => number;
+    textLeading: (leading?: number) => number;
+
+
     describe: (text: string) => void;
 
     //math
@@ -86,9 +94,16 @@ export type Sketch = {
 
     //constants
     PI: number;
-    CENTER: number;
-    CORNER: number;
-    CORNERS: number;
+    CORNER: any;
+    CORNERS: any;
+    CENTER: any;
+    LEFT: any;
+    RIGHT: any;
+    TOP: any;
+    BOTTOM: any;
+    BASELINE: any;
+    WORD: any;
+    CHAR: any;
 };
 
 export type P5Vector = {

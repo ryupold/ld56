@@ -11,41 +11,78 @@ const Engine = Matter.Engine,
     Bodies = Matter.Bodies,
     Vector = Matter.Vector;
 
+export function chainPositionBorder(s: State) {
+    return {
+        min: 10,
+        max: s.screen.width - 10,
+    };
+}
 
 export async function moveChain(s: State, distance: number, time: number = 3000, steps: number = 20) {
-    // const start = s.chain.anchor.position.x;
-    for (let i = 0; i < steps; i++) {
-        Matter.Body.translate(s.chain.anchor, { x: distance / steps, y: 0 });
-        if (s.chain.anchor.position.x <= 0) {
-            s.chain.anchor.position.x = 0;
-            return;
+    if (s.chain.movingHorizontally) return;
+
+    const border = chainPositionBorder(s);
+
+    try {
+        s.chain.movingHorizontally = true;
+        for (let i = 0; i < steps; i++) {
+            Matter.Body.translate(s.chain.anchor, { x: distance / steps, y: 0 });
+            if (s.chain.anchor.position.x <= border.min) {
+                s.chain.anchor.position.x = border.min;
+                return;
+            }
+            if (s.chain.anchor.position.x >= border.max) {
+                s.chain.anchor.position.x = border.max;
+                return;
+            }
+            await delay(time / steps);
         }
-        if (s.chain.anchor.position.x >= s.screen.width) {
-            s.chain.anchor.position.x = s.screen.width;
-            return;
-        }
-        await delay(time / steps);
+    } finally {
+        s.chain.movingHorizontally = false;
     }
+
+    console.log("chain position reached ", s.chain.anchor.position.x);
+}
+
+export async function moveChainHorizontally(s: State, targetX: number, time: number = 3000, steps: number = 20) {
+    if (s.chain.movingHorizontally) return;
+    try {
+
+        s.chain.movingHorizontally = true;
+        const startX = s.chain.anchor.position.x;
+        for (let i = 0; i < steps; i++) {
+            // console.log(startX, startX + i / steps * (targetX - startX), targetX);
+            Matter.Body.setPosition(s.chain.anchor, { x: startX + i / steps * (targetX - startX), y: s.chain.anchor.position.y });
+            await delay(time / steps);
+        }
+    } finally {
+        s.chain.movingHorizontally = false;
+    }
+
+    console.log("chain position reached ", s.chain.anchor.position.x);
 }
 
 export async function moveChainVertically(s: State, targetY: number, time: number = 3000, steps: number = 20) {
-    if(s.chain.moving) return;
+    if (s.chain.movingVertically) return;
 
-    s.chain.moving = true;
-    const start = s.chain.anchor.position.y;
-    for (let i = 0; i < steps; i++) {
-        Matter.Body.setPosition(
-            s.chain.anchor,
-            {
-                x: s.chain.anchor.position.x,
-                y: start + (i / steps) * (targetY - start)
-            }
-        );
-        if (i + 1 < steps) await delay(time / steps);
+    try {
+        s.chain.movingVertically = true;
+        const start = s.chain.anchor.position.y;
+        for (let i = 0; i < steps; i++) {
+            Matter.Body.setPosition(
+                s.chain.anchor,
+                {
+                    x: s.chain.anchor.position.x,
+                    y: start + (i / steps) * (targetY - start)
+                }
+            );
+            if (i + 1 < steps) await delay(time / steps);
+        }
+    } finally {
+        s.chain.movingVertically = false;
     }
-    s.chain.moving = false;
-    
-    console.log("moved chain to", s.chain.anchor.position);
+
+    console.log("chain height reached ", s.chain.anchor.position.y);
 }
 
 /**

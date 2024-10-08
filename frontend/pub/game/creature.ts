@@ -12,7 +12,7 @@ export function newCreatureID(): number {
 }
 
 export function createCreatureBody(x: number, y: number) {
-    const bodyRadius = Matter.Common.random(10, 20);
+    const bodyRadius = Matter.Common.random(8, 17);
     const limbRadius = Matter.Common.random(3, 5);
     const group = Matter.Body.nextGroup(true);
 
@@ -38,7 +38,7 @@ export function createCreatureBody(x: number, y: number) {
             ...limbs,
         ],
         friction: 0.6,
-        restitution: 0.7,
+        restitution: 0.6,
         slop: 0.5,
     });
 

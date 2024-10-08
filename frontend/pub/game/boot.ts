@@ -4,6 +4,7 @@ import { MatterJs } from "./matter.js";
 import { initGame } from "./game.js";
 import { draw } from "./render.js";
 import { PREFIX } from "../api/prefix.js";
+import { initHUD } from "./hud.js";
 
 declare var Matter: MatterJs;
 const tickRate = 60;
@@ -39,6 +40,8 @@ function setup(s: State, c: HTMLCanvasElement) {
 export function initEngine(s: State, canvas: HTMLCanvasElement) {
     initP5(preload(s), setup(s, canvas), draw(s));
 
+    initHUD(s);
+
     const engine = Matter.Engine.create();
     const render = Matter.Render.create({
         element: document.body,
@@ -52,10 +55,10 @@ export function initEngine(s: State, canvas: HTMLCanvasElement) {
             showVelocity: true
         }
     });
-    Matter.Render.lookAt(render, {
-        min: { x: 0, y: 0 },
-        max: { x: s.screen.width, y: s.screen.height }
-    });
+    // Matter.Render.lookAt(render, {
+    //     min: { x: 0, y: 0 },
+    //     max: { x: s.screen.width, y: s.screen.height }
+    // });
     Matter.Render.run(render);
 
     const runner = Matter.Runner.create({
