@@ -49,12 +49,12 @@ export const content = (s: State): Vode<State> => {
             // },
         }],
         [DIV, { id: 'game-hud' },
-            
+
             [BUTTON, {
                 class: 'start-button',
                 onclick: async (ss: State, e: Event) => {
                     (e.target as any)?.remove();
-                    await startGame(ss, false);
+                    await startGame(ss, isMobile());
                 },
             }, "start game"]
         ]
@@ -70,3 +70,10 @@ const unusedButtons = [
     [BUTTON, { onclick: (ss: State, e: Event) => moveChainVertically(ss, ss.chain.verticalMin) }, "⬆️"],
     [BUTTON, { onclick: (ss: State, e: Event) => moveChainVertically(ss, ss.chain.verticalMax) }, "🔽"],
 ];
+
+function isMobile(){
+    return !!(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone|iPad|iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
+        || navigator.userAgent.match(/Opera Mini/i)
+        || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i));
+}
