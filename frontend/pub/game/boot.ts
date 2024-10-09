@@ -22,6 +22,7 @@ function setup(s: State, c: HTMLCanvasElement) {
     return function (r: Sketch) {
         r.frameRate(tickRate);
         r.createCanvas(s.screen.width, s.screen.height, c);
+        s.start = Date.now();
     }
 }
 

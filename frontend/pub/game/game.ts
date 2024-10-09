@@ -50,7 +50,7 @@ export async function initGame(s: State) {
         w: housingFloorWidth(s) - 50,
         h: s.screen.height / 3 - 100,
     };
-    const creatureCount = Math.min(CREATURE_COUNT_MAX, spawnRect.w * spawnRect.h / 250);
+    const creatureCount = Math.min(CREATURE_COUNT_MAX, spawnRect.w * spawnRect.h / 350);
     console.log("creatureCount", creatureCount);
     //--- spawn creatures --------
     for (let i = 0; i < creatureCount; i++) {
@@ -87,6 +87,7 @@ export function clawMovementAndUpdateHUD(s: State, r: Sketch) {
     } else {
         s.hud.clawButton.pressed = false;
         if (s.game.state === 'movingForward' || s.game.state === 'movingBack') {
+            s.chain.claw.grabs++;
             s.game.state = 'dropping';
             s.hud.clawButton.visible = false;
             s.patch(async () => {

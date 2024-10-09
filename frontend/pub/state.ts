@@ -13,6 +13,7 @@ export const init = createState({
      },
 
     world: <World><unknown>undefined,
+    start: <number>0,
     
     chain: {
         verticalMin: 0,
@@ -23,6 +24,7 @@ export const init = createState({
         claw: {
             comp: <Composite><unknown>undefined,
             clawing: false,
+            grabs: 0,
             state: <'open' | 'close'>'open',
             distance: {
                 upperConstraint: <Constraint><unknown>undefined, 

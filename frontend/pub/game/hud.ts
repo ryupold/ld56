@@ -46,17 +46,29 @@ export function drawHUD(s: State, r: Sketch) {
     const score = s.hud.score;
     if (score.visible) {
         r.push();
-        r.translate(score.x, score.y);
-        r.stroke(255, 255, 255);
-        r.fill(10, 10, 10);
-        r.rect(0, 0, score.w, score.h);
-        r.textSize(18);
-        r.textAlign(r.CENTER, r.CENTER);
-        const scoreTxt = `${s.game.score}`;
-        const tw = r.textWidth(scoreTxt);
-        r.translate(tw / 2, score.h / 2);
-        r.fill(255, 255, 255);
-        r.text(scoreTxt, (score.w - tw) / 2, 0);
+        {
+            r.translate(score.x, score.y);
+            r.stroke(255, 255, 255);
+            r.fill(10, 10, 10);
+            r.rect(0, 0, score.w, score.h);
+            r.textSize(18);
+            r.textAlign(r.CENTER, r.CENTER);
+            const scoreTxt = `${s.game.score}`;
+            const tw = r.textWidth(scoreTxt);
+            r.translate(tw / 2, score.h / 2);
+            r.fill(255, 255, 255);
+            r.text(scoreTxt, (score.w - tw) / 2, 0);
+        }
         r.pop();
     }
+
+    r.push();
+    {
+        r.translate(0, 0);
+        r.fill(255, 255, 255);
+        r.textSize(18);
+        r.textAlign(r.LEFT, r.CENTER);
+        r.text(`FPS: ${(r.frameCount * 1000 / (Date.now() - s.start)).toFixed(0)}   Grabs: ${s.chain.claw.grabs}`, 20, 10);
+    }
+    r.pop();
 }
