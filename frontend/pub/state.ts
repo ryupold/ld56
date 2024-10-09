@@ -54,6 +54,7 @@ export const init = createState({
 
     game: {
         score: 0,
+        started: false, 
         state: <'idle' | 'movingForward' | 'movingBack' | 'dropping' | 'pulling' | 'returning'>'idle',
     },
 
@@ -71,7 +72,16 @@ export const init = createState({
             x: 0, y: 0, w: 50, h: 50,
             visible: false,
         },
-    }
+    },
+
+    debug: {
+        // confi
+        render: false,
+        grabbing: false,
+        
+        // volatile state
+        pressingHold: false,
+    },
 });
 
 init.events.onClick.push(mouseClick);

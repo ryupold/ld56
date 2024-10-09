@@ -55,17 +55,21 @@ export async function initGame(s: State) {
     //--- spawn creatures --------
     for (let i = 0; i < creatureCount; i++) {
         // if (CREATURE_SPAWN_TIME > creatureCount)
-            // await delay(1 - CREATURE_SPAWN_TIME / creatureCount);
+        // await delay(1 - CREATURE_SPAWN_TIME / creatureCount);
         spawnCreatureInRect(s, spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
     }
     //----------------------------
 
-
     s.hud.clawButton.visible = true;
+    s.game.started = true;
+
+    if (s.debug.grabbing) {
+        s.patch(automateClaw);
+    }
 }
 
 export function clawMovementAndUpdateHUD(s: State, r: Sketch) {
-    if (r.mouseIsPressed && r.mouseX > s.hud.clawButton.x && r.mouseX < s.hud.clawButton.x + s.hud.clawButton.w && r.mouseY > s.hud.clawButton.y && r.mouseY < s.hud.clawButton.y + s.hud.clawButton.h && s.hud.clawButton.visible) {
+    if (s.debug.pressingHold || (r.mouseIsPressed && r.mouseX > s.hud.clawButton.x && r.mouseX < s.hud.clawButton.x + s.hud.clawButton.w && r.mouseY > s.hud.clawButton.y && r.mouseY < s.hud.clawButton.y + s.hud.clawButton.h && s.hud.clawButton.visible)) {
         s.hud.clawButton.pressed = true;
         if (s.game.state === 'idle') {
             s.game.state = 'movingForward';
@@ -79,7 +83,7 @@ export function clawMovementAndUpdateHUD(s: State, r: Sketch) {
         }
         if (s.game.state === 'movingBack') {
             const border = chainPositionBorder(s);
-            if (s.chain.anchor.position.x - border.min > border.max) {
+            if (s.chain.anchor.position.x + border.min * 4 > border.max) {
                 s.game.state = 'movingForward';
             }
             else if (!s.chain.movingVertically) s.patch(moveChain(s, CHAIN_MOVEMENT_DELTA, 800));
@@ -128,6 +132,18 @@ function checkForGrabbedCreatures(s: State) {
 }
 
 
-export async function* goClaw(s: State) {
-
+/**
+ * "play" the game in idle mode
+ * @param s {State}
+ */
+export async function* automateClaw(s: State) {
+    while (s.game.started && s.models.filter(m => m.type === ModelType.Creature).length > 0) {
+        if (s.game.state === 'idle') {
+            // press the button for 100ms - 15000ms
+            s.debug.pressingHold = true;
+            await delay(Matter.Common.random(100, 15000));
+            s.debug.pressingHold = false;
+        }
+        else yield await delay(1000);
+    }
 }

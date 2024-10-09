@@ -27,15 +27,14 @@ function setup(s: State, c: HTMLCanvasElement) {
 }
 
 export function initEngine(s: State, 
-    canvas: HTMLCanvasElement, 
-    debugRender: boolean = false,
+    canvas: HTMLCanvasElement
 ) {
-    initP5(preload(s), setup(s, canvas), draw(s, debugRender));
+    initP5(preload(s), setup(s, canvas), draw(s, s.debug.render));
 
     initHUD(s);
 
     const engine = Matter.Engine.create();
-    if (debugRender) {
+    if (s.debug.render) {
         const render = Matter.Render.create({
             element: document.body,
             engine: engine,
