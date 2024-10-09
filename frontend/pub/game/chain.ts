@@ -15,8 +15,8 @@ const Engine = Matter.Engine,
 
 export function chainPositionBorder(s: State) {
     return {
-        min: 10,
-        max: s.screen.width - 10,
+        min: 30,
+        max: s.screen.width - 30,
     };
 }
 
@@ -46,12 +46,13 @@ export async function moveChain(s: State, distance: number, time: number = 3000,
     console.log("chain position reached ", s.chain.anchor.position.x);
 }
 
-export async function moveChainHorizontally(s: State, targetX: number, time: number = 3000, steps: number = 20) {
+export async function moveChainHorizontally(s: State, targetX: number, time?: number, steps: number = 20) {
     if (s.chain.movingHorizontally) return;
     try {
-
         s.chain.movingHorizontally = true;
         const startX = s.chain.anchor.position.x;
+        if(!time) time = (targetX - startX) * 10;
+        console.log(time);
         for (let i = 0; i < steps; i++) {
             // console.log(startX, startX + i / steps * (targetX - startX), targetX);
             Matter.Body.setPosition(s.chain.anchor, { x: startX + i / steps * (targetX - startX), y: s.chain.anchor.position.y });

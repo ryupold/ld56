@@ -2,7 +2,7 @@ import { delay } from "../exports.js";
 import { State } from "../state.js";
 import { chainPositionBorder, createChain, moveChain, moveChainHorizontally, moveChainVertically } from "./chain.js";
 import { closeClaw, createClaw, openClaw } from "./claw.js";
-import { CHAIN_MOVEMENT_DELTA, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MAX } from "./constants.js";
+import { CHAIN_MOVEMENT_DELTA, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MAX, CREATURE_COUNT_MAX, CREATURE_SPAWN_TIME } from "./constants.js";
 import { spawnCreatureInRect } from "./creature.js";
 import { createHousing, housingFloorWidth } from "./housing.js";
 import { MatterJs } from "./matter.js";
@@ -37,16 +37,26 @@ export async function initGame(s: State) {
     s.chain.claw.distance.lowerConstraint = claw.distance.lower;
 
     const resetTime = 3000;
-    s.patch(moveChainVertically(s, s.chain.verticalMin, resetTime));
-    s.patch(moveChainHorizontally(s, initialChainPosition(s)));
+    s.patch(Promise.all([
+        moveChainVertically(s, s.chain.verticalMin, resetTime),
+        moveChainHorizontally(s, initialChainPosition(s)),
+    ]));
     await delay(resetTime);
     //----------------------------
 
-
+    const spawnRect = {
+        x: 50,
+        y: s.screen.height - s.screen.height / 3 - 100,
+        w: housingFloorWidth(s) - 50,
+        h: s.screen.height / 3 - 100,
+    };
+    const creatureCount = Math.min(CREATURE_COUNT_MAX, spawnRect.w * spawnRect.h / 250);
+    console.log("creatureCount", creatureCount);
     //--- spawn creatures --------
-    for (let i = 0; i < 40; i++) {
-        await delay(50);
-        spawnCreatureInRect(s, 50, s.screen.height - s.screen.height / 3 - 100, housingFloorWidth(s) - 50, s.screen.height / 3 - 100);
+    for (let i = 0; i < creatureCount; i++) {
+        // if (CREATURE_SPAWN_TIME > creatureCount)
+            // await delay(1 - CREATURE_SPAWN_TIME / creatureCount);
+        spawnCreatureInRect(s, spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
     }
     //----------------------------
 

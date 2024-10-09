@@ -25,7 +25,10 @@ function setup(s: State, c: HTMLCanvasElement) {
     }
 }
 
-export function initEngine(s: State, canvas: HTMLCanvasElement, debugRender: boolean = false) {
+export function initEngine(s: State, 
+    canvas: HTMLCanvasElement, 
+    debugRender: boolean = false,
+) {
     initP5(preload(s), setup(s, canvas), draw(s, debugRender));
 
     initHUD(s);

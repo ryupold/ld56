@@ -1,5 +1,5 @@
 import { State } from "../state.js";
-import { CREATURE_DENSITY } from "./constants.js";
+import { CREATURE_DENSITY, CREATURE_SIZE_MAX, CREATURE_SIZE_MIN } from "./constants.js";
 import { Body, BodyOptions, MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
 
@@ -13,7 +13,7 @@ export function newModelID(): number {
 }
 
 export function createCreatureBody(x: number, y: number) {
-    const bodyRadius = Matter.Common.random(10, 20);
+    const bodyRadius = Matter.Common.random(CREATURE_SIZE_MIN, CREATURE_SIZE_MAX);
     const limbRadius = Matter.Common.random(2, 5);
     const group = Matter.Body.nextGroup(true);
 
