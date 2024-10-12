@@ -2,8 +2,9 @@ import { delay } from "../exports.js";
 import { State } from "../state.js";
 import { chainPositionBorder, createChain, moveChain, moveChainHorizontally, moveChainVertically } from "./chain.js";
 import { closeClaw, createClaw, openClaw } from "./claw.js";
-import { CHAIN_MOVEMENT_DELTA, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MAX, CREATURE_COUNT_MAX, CREATURE_SPAWN_TIME } from "./constants.js";
+import { CHAIN_MOVEMENT_DELTA, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MAX, CREATURE_COUNT_MAX, CREATURE_SIZE_MAX } from "./constants.js";
 import { spawnCreatureInRect } from "./creature.js";
+import { dropCurtain, pullUpCurtain } from "./curtain.js";
 import { createHousing, housingFloorWidth } from "./housing.js";
 import { MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
@@ -18,11 +19,47 @@ const Engine = Matter.Engine,
     Vector = Matter.Vector;
 
 export async function initGame(s: State) {
-    const housing = createHousing(s);
+    createHousing(s);
+    linkChainAndClaw(s);
+
+    restartGame(s);
+    
+    await delay(10000);
+    restartGame(s);
+}
+
+export async function restartGame(s: State, resetTime: number = 3000) {
+    await Promise.all([
+        dropCurtain(s),
+        moveChainVertically(s, s.chain.verticalMin, resetTime),
+        moveChainHorizontally(s, initialChainPosition(s)),
+    ]);
+
+    //remove all creatures
+    const creatures = s.models.filter(m => m.type === ModelType.Creature);
+    s.models = s.models.filter(m => m.type !== ModelType.Creature);
+
+    for (const creature of creatures) {
+        Matter.Composite.remove(s.world, creature.body);
+    }
+
+    spawnCreatures(s);
+
+    await pullUpCurtain(s);
+
+    s.images.targetCreature = Matter.Common.choose([...s.images.creaturesA, ...s.images.creaturesB]);
+    s.hud.clawButton.visible = true;
+    s.game.started = true;
+    
+    if (s.debug.grabbing) {
+        s.patch(automateClaw);
+    }
+}
+
+function linkChainAndClaw(s: State) {
     const chain = createChain(s);
     const claw = createClaw(s, { x: 0, y: chain.chain.bodies[chain.chain.bodies.length - 1].position.y + 10 }, { upper: CLAW_SEPERATOR_UPPER_MAX, lower: CLAW_SEPERATOR_LOWER_MAX });
 
-    //--- combine chain & claw ---
     Composite.add(s.world, Composite.create({
         constraints: [
             Constraint.create({
@@ -35,38 +72,22 @@ export async function initGame(s: State) {
     s.chain.claw.comp = claw.claw;
     s.chain.claw.distance.upperConstraint = claw.distance.upper;
     s.chain.claw.distance.lowerConstraint = claw.distance.lower;
+}
 
-    const resetTime = 3000;
-    s.patch(Promise.all([
-        moveChainVertically(s, s.chain.verticalMin, resetTime),
-        moveChainHorizontally(s, initialChainPosition(s)),
-    ]));
-    await delay(resetTime);
-    //----------------------------
-
+function spawnCreatures(s: State) {
     const spawnRect = {
         x: 50,
-        y: s.screen.height - s.screen.height / 3 - 100,
-        w: housingFloorWidth(s) - 50,
-        h: s.screen.height / 3 - 100,
+        y: 0,
+        w: housingFloorWidth(s) - 150,
+        h: s.screen.height / 3,
     };
-    const creatureCount = Math.min(CREATURE_COUNT_MAX, spawnRect.w * spawnRect.h / 250);
-    console.log("creatureCount", creatureCount);
+    const creatureCount = Math.min(CREATURE_COUNT_MAX, spawnRect.w * spawnRect.h / (2*CREATURE_SIZE_MAX * CREATURE_SIZE_MAX));
     //--- spawn creatures --------
     for (let i = 0; i < creatureCount; i++) {
-        // if (CREATURE_SPAWN_TIME > creatureCount)
-        // await delay(1 - CREATURE_SPAWN_TIME / creatureCount);
         spawnCreatureInRect(s, spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
     }
-    //----------------------------
-
-    s.hud.clawButton.visible = true;
-    s.game.started = true;
-
-    if (s.debug.grabbing) {
-        s.patch(automateClaw);
-    }
 }
+
 
 export function clawMovementAndUpdateHUD(s: State, r: Sketch) {
     if (s.debug.pressingHold || (r.mouseIsPressed && r.mouseX > s.hud.clawButton.x && r.mouseX < s.hud.clawButton.x + s.hud.clawButton.w && r.mouseY > s.hud.clawButton.y && r.mouseY < s.hud.clawButton.y + s.hud.clawButton.h && s.hud.clawButton.visible)) {
@@ -125,7 +146,6 @@ function checkForGrabbedCreatures(s: State) {
     for (const model of removeCreatures) {
         Matter.Composite.remove(s.world, model.body);
         s.models.splice(s.models.indexOf(model), 1);
-        console.log(`grabbed creature #${model.id}`);
         s.game.score += 1;
         s.hud.score.visible = s.game.score > 0;
     }
@@ -141,7 +161,7 @@ export async function* automateClaw(s: State) {
         if (s.game.state === 'idle') {
             // press the button for 100ms - 15000ms
             s.debug.pressingHold = true;
-            await delay(Matter.Common.random(100, 15000));
+            yield await delay(Matter.Common.random(100, 15000));
             s.debug.pressingHold = false;
         }
         else yield await delay(1000);

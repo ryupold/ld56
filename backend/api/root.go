@@ -17,8 +17,9 @@ func Root(config APIConfig) func(r *http.Request) (website.MaybeRoute, error) {
 			path == "/index.html" ||
 			(strings.Count(path, "/") == 1 && strings.HasSuffix(path, ".html")) ||
 			strings.HasPrefix(path, "/pub/")
+		var isVodeOrTools = strings.HasPrefix(path, "/vode/") || strings.HasPrefix(path, "/tools/")
 
-		if isPubPage {
+		if isPubPage || isVodeOrTools {
 			return func(w http.ResponseWriter, req *http.Request) error {
 				if err := website.ServeFile(w, r, website.JoinPaths(config.FrontendPath, path), true); err != nil {
 					return website.RedirectTo404(w, r, website.JoinPaths(config.FrontendPath, "/pub/error/404.html"), false)

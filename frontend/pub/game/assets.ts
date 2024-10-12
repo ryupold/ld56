@@ -3,11 +3,12 @@ import { State } from "../state.js";
 import { Sketch } from "./p5.js";
 
 export function loadCommonAssets(s: State, r: Sketch) {
-    s.images.common.background = r.loadImage(`${PREFIX}/pub/assets/img/common/background.png`);
+    s.images.hud.background = r.loadImage(`${PREFIX}/pub/assets/img/hud/background.png`);
+    s.images.hud.curtain = r.loadImage(`${PREFIX}/pub/assets/img/hud/curtain.png`);
 }
 
 export function loadCreatureAssets(s: State, r: Sketch) {
-    s.images.creatures = [
+    s.images.creaturesA = [
         ...loadImages(r,
             `${PREFIX}/pub/assets/img/creatures/monster001.png`,
             `${PREFIX}/pub/assets/img/creatures/monster002.png`,
@@ -25,6 +26,27 @@ export function loadCreatureAssets(s: State, r: Sketch) {
             `${PREFIX}/pub/assets/img/creatures/monster014.png`,
             `${PREFIX}/pub/assets/img/creatures/monster015.png`,
             `${PREFIX}/pub/assets/img/creatures/monster016.png`,
+        )
+    ]
+    
+    s.images.creaturesB = [
+        ...loadImages(r,
+            `${PREFIX}/pub/assets/img/creatures/monster001_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster002_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster003_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster004_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster005_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster006_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster007_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster008_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster009_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster010_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster011_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster012_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster013_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster014_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster015_2.png`,
+            `${PREFIX}/pub/assets/img/creatures/monster016_2.png`,
         )
     ]
 }

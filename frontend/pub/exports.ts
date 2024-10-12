@@ -1,10 +1,11 @@
-export * from '../../../../../modules/vode/frontend/index.js';
-export * from '../../../../../modules/tools/frontend/index.js';
+export * from '../vode/index.js';
+export * from '../tools/index.js';
 
 let globalID = 1;
 export function newID() {
     return `vode-${globalID++}`;
 }
+
 export function resetID() {
     globalID = 1;
 }
@@ -45,5 +46,5 @@ export function newCache<K, V>() {
     return x;
 }
 
-export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+export const delay = (ms: number) => new Promise<void>(res => setTimeout(res, ms));
 

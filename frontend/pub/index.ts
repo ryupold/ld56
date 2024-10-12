@@ -1,9 +1,7 @@
-import { Effect, app } from "./exports.js";
+import { app } from "./exports.js";
 import { reloadState } from './persist-state.js';
-import { isDev } from './isdev.js';
 import { content } from './content.js';
 import { State, init } from "./state.js";
-import { initEngine } from "./game/boot.js";
 
 const node = document.getElementById('app')!;
 

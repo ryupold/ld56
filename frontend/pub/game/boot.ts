@@ -29,6 +29,10 @@ function setup(s: State, c: HTMLCanvasElement) {
 export function initEngine(s: State, 
     canvas: HTMLCanvasElement
 ) {
+    //loading curtain
+    s.hud.curtain.segments = s.screen.width / 100;
+    s.hud.curtain.y = 0;
+
     initP5(preload(s), setup(s, canvas), draw(s, s.debug.render));
 
     initHUD(s);

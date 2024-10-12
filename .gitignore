@@ -4,3 +4,8 @@
 *.d.ts
 *.d.ts.map
 *.tsbuildinfo
+
+
+!frontend/pub/game/pixi.d.ts
+!frontend/pub/game/pixi.js
+!frontend/pub/game/pixi.js.map

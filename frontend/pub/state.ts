@@ -7,14 +7,14 @@ import { Image } from "./game/p5.js";
 export const init = createState({
     route: route(window.location),
 
-    screen: { 
-        width: Math.min(document.documentElement.clientWidth, window.innerWidth), 
+    screen: {
+        width: Math.min(document.documentElement.clientWidth, window.innerWidth),
         height: Math.min(document.documentElement.clientWidth / 16 * 9, window.innerHeight),
-     },
+    },
 
     world: <World><unknown>undefined,
     start: <number>0,
-    
+
     chain: {
         verticalMin: 0,
         verticalMax: 0,
@@ -27,7 +27,7 @@ export const init = createState({
             grabs: 0,
             state: <'open' | 'close'>'open',
             distance: {
-                upperConstraint: <Constraint><unknown>undefined, 
+                upperConstraint: <Constraint><unknown>undefined,
                 lowerConstraint: <Constraint><unknown>undefined,
             }
         },
@@ -35,10 +35,13 @@ export const init = createState({
 
     models: <Model[]>[],
     images: {
-        common: {
+        hud: {
             background: <Image><unknown>undefined,
+            curtain: <Image><unknown>undefined,
         },
-        creatures: <Image[]>[],
+        targetCreature: <Image><unknown>undefined,
+        creaturesA: <Image[]>[],
+        creaturesB: <Image[]>[],
         claw: {
             clawSegment: <Image><unknown>undefined,
             clawBolt: <Image><unknown>undefined,
@@ -54,12 +57,12 @@ export const init = createState({
 
     game: {
         score: 0,
-        started: false, 
+        started: false,
         state: <'idle' | 'movingForward' | 'movingBack' | 'dropping' | 'pulling' | 'returning'>'idle',
     },
 
     events: {
-        onClick: <((_: any, e: MouseEvent)=>unknown)[]>[],
+        onClick: <((_: any, e: MouseEvent) => unknown)[]>[],
     },
 
     hud: {
@@ -72,13 +75,18 @@ export const init = createState({
             x: 0, y: 0, w: 50, h: 50,
             visible: false,
         },
+        curtain: {
+            state: <'up' | 'down' | 'pulling' | 'dropping'>'down',
+            segments: 1,
+            y: 0,
+        },
     },
 
     debug: {
         // confi
         render: false,
         grabbing: false,
-        
+
         // volatile state
         pressingHold: false,
     },

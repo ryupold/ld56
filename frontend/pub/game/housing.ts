@@ -4,6 +4,7 @@ import { BodyOptions, MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
 
 declare var Matter: MatterJs;
+
 const Engine = Matter.Engine,
     Composite = Matter.Composite,
     Composites = Matter.Composites,

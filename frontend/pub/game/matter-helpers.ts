@@ -1,4 +1,4 @@
-import { MatterJs, Composite } from "./matter.js";
+import { MatterJs, Composite } from "./matter.js"; 
 
 declare var Matter: MatterJs;
 

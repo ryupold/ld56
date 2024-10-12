@@ -1,11 +1,7 @@
-import { delay } from "../exports.js";
 import { State } from "../state.js";
-import { chainPositionBorder, moveChain, moveChainHorizontally, moveChainVertically } from "./chain.js";
-import { closeClaw, openClaw } from "./claw.js";
-import { CHAIN_MOVEMENT_DELTA } from "./constants.js";
-import { initialChainPosition } from "./game.js";
 import { housingFloorWidth } from "./housing.js";
 import { Sketch } from "./p5.js";
+
 
 export function initHUD(s: State) {
     s.hud.clawButton.x = s.screen.width - (s.screen.width - housingFloorWidth(s)) / 1.5;
@@ -16,6 +12,16 @@ export function initHUD(s: State) {
 }
 
 export function drawHUD(s: State, r: Sketch) {
+    drawClawButton(s, r);
+
+    drawScore(s, r);
+
+    drawFPS(s, r);
+
+    drawCurtain(s, r);
+}
+
+function drawClawButton(s: State, r: Sketch) {
     const clawButton = s.hud.clawButton;
     if (clawButton.visible) {
         r.push();
@@ -42,7 +48,9 @@ export function drawHUD(s: State, r: Sketch) {
         r.text("GO", (clawButton.w - tw) / 2, 0);
         r.pop();
     }
+}
 
+function drawScore(s: State, r: Sketch) {
     const score = s.hud.score;
     if (score.visible) {
         r.push();
@@ -61,14 +69,44 @@ export function drawHUD(s: State, r: Sketch) {
         }
         r.pop();
     }
+}
+
+function drawCurtain(s: State, r: Sketch) {
+    if(s.hud.curtain.state === 'up') return;
+
+    r.push(); {
+        r.translate(0, s.hud.curtain.y);
+        r.imageMode(r.CORNER);
+        for (let i = 0; i < s.hud.curtain.segments; i++) {
+            r.tint(255, 128);
+            r.image(s.images.hud.curtain, i * s.screen.width / s.hud.curtain.segments, 0, s.screen.width / s.hud.curtain.segments, s.screen.height);
+        }
+    } r.pop();
+}
+
+let frames = 0;
+let fps = 60;
+let lastFpsMeasure = Date.now();
+function drawFPS(s: State, r: Sketch) {
+    frames++;
+    const now = Date.now();
+    if (now >= lastFpsMeasure + 1000) {
+        fps = frames * 1000 / (now - lastFpsMeasure);
+        lastFpsMeasure = now;
+        frames = 0;
+    }
 
     r.push();
     {
         r.translate(0, 0);
         r.fill(255, 255, 255);
         r.textSize(18);
-        r.textAlign(r.LEFT, r.CENTER);
-        r.text(`FPS: ${(r.frameCount * 1000 / (Date.now() - s.start)).toFixed(0)}   Grabs: ${s.chain.claw.grabs}`, 20, 10);
+        r.textAlign(r.LEFT, r.TOP);
+        r.text(`Grabs: ${s.chain.claw.grabs}`, 20, 10);
+        r.textSize(10);
+        r.fill(128);
+        r.textAlign(r.LEFT, r.TOP);
+        r.text(`${fps.toFixed(0)} FPS`, s.screen.width - 60, 10);
     }
     r.pop();
 }

@@ -13,30 +13,33 @@ export function newModelID(): number {
 }
 
 export function createCreatureBody(x: number, y: number) {
+    const isTiny = Math.random() < 0.55;
+
     const bodyRadius = Matter.Common.random(CREATURE_SIZE_MIN, CREATURE_SIZE_MAX);
     const limbRadius = Matter.Common.random(2, 5);
-    const group = Matter.Body.nextGroup(true);
 
-    const limbs = <Body[]>[];
+    const group = Matter.Body.nextGroup(true);
     const material = <BodyOptions>{
         collisionFilter: { group },
         density: CREATURE_DENSITY,
     };
 
-    for (let i = 0; i < 0; i++) {
-        let direction = Matter.Vector.rotate({ x: 1, y: 0 }, i * (Math.PI*2 / 5));
-        direction = Matter.Vector.mult(direction, bodyRadius + limbRadius/2);
-        limbs.push(
-            Matter.Bodies.circle(x + direction.x, y + direction.y, limbRadius, material)
-        );
-    }
+    // const limbs = <Body[]>[];
+    // for (let i = 0; i < 0; i++) {
+    //     let direction = Matter.Vector.rotate({ x: 1, y: 0 }, i * (Math.PI*2 / 5));
+    //     direction = Matter.Vector.mult(direction, bodyRadius + limbRadius/2);
+    //     limbs.push(
+    //         Matter.Bodies.circle(x + direction.x, y + direction.y, limbRadius, material)
+    //     );
+    // }
 
     const body = Matter.Body.create({
         parts: [
-            Matter.Bodies.circle(x, y, bodyRadius, {...material, 
-                density: CREATURE_DENSITY, 
+            Matter.Bodies.circle(x, y, bodyRadius, {
+                ...material,
+                density: CREATURE_DENSITY,
             }),
-            ...limbs,
+            // ...limbs,
         ],
         friction: 0.9,
         restitution: 0.1,
@@ -45,11 +48,11 @@ export function createCreatureBody(x: number, y: number) {
 
     body.angle = Matter.Common.random(-0.2, 0.2);
 
-    return {body, bodyRadius, limbRadius};
+    return { body, bodyRadius, limbRadius };
 }
 
 
-export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, spawnW: number, spawnH: number){
+export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, spawnW: number, spawnH: number) {
     const x = Matter.Common.random(spawnX, spawnX + spawnW);
     const y = Matter.Common.random(spawnY, spawnY + spawnH);
 
@@ -60,6 +63,6 @@ export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, sp
         type: ModelType.Creature,
         body: creature.body,
         w: creature.bodyRadius * 3.5, h: creature.bodyRadius * 3.5,
-        img: Matter.Common.choose(s.images.creatures),
+        img: Matter.Common.choose([...s.images.creaturesA, ...s.images.creaturesB]),
     });
 }

@@ -52,17 +52,13 @@ export async function moveChainHorizontally(s: State, targetX: number, time?: nu
         s.chain.movingHorizontally = true;
         const startX = s.chain.anchor.position.x;
         if(!time) time = (targetX - startX) * 10;
-        console.log(time);
         for (let i = 0; i < steps; i++) {
-            // console.log(startX, startX + i / steps * (targetX - startX), targetX);
             Matter.Body.setPosition(s.chain.anchor, { x: startX + i / steps * (targetX - startX), y: s.chain.anchor.position.y });
             await delay(time / steps);
         }
     } finally {
         s.chain.movingHorizontally = false;
     }
-
-    console.log("chain position reached ", s.chain.anchor.position.x);
 }
 
 export async function moveChainVertically(s: State, targetY: number, time: number = 3000, steps: number = 20) {
@@ -84,8 +80,6 @@ export async function moveChainVertically(s: State, targetY: number, time: numbe
     } finally {
         s.chain.movingVertically = false;
     }
-
-    console.log("chain height reached ", s.chain.anchor.position.y);
 }
 
 /**
@@ -97,8 +91,6 @@ export function createChain(s: State) {
     //calculate vertical min and max chain position
     s.chain.verticalMin = -s.screen.height * 1.25;
     s.chain.verticalMax = -s.screen.height / 2.5;
-
-    console.log(s.chain);
 
     const segmentSize = CHAIN_SEGMENT_SIZE;
     const length = s.screen.height;

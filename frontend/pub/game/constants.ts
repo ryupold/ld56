@@ -10,7 +10,6 @@ export const CHAIN_SEGMENT_SIZE = 10;
 
 
 export const CREATURE_SIZE_MIN = 10;
-export const CREATURE_SIZE_MAX = 15;
+export const CREATURE_SIZE_MAX = 16;
 export const CREATURE_COUNT_MAX = 2000;
 export const CREATURE_SPAWN_TIME = 2000;
-
