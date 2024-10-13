@@ -42,8 +42,6 @@ export async function moveChain(s: State, distance: number, time: number = 3000,
     } finally {
         s.chain.movingHorizontally = false;
     }
-
-    console.log("chain position reached ", s.chain.anchor.position.x);
 }
 
 export async function moveChainHorizontally(s: State, targetX: number, time?: number, steps: number = 20) {
@@ -56,6 +54,7 @@ export async function moveChainHorizontally(s: State, targetX: number, time?: nu
             Matter.Body.setPosition(s.chain.anchor, { x: startX + i / steps * (targetX - startX), y: s.chain.anchor.position.y });
             await delay(time / steps);
         }
+        Matter.Body.setPosition(s.chain.anchor, { x: targetX, y: s.chain.anchor.position.y });
     } finally {
         s.chain.movingHorizontally = false;
     }
@@ -77,6 +76,13 @@ export async function moveChainVertically(s: State, targetY: number, time: numbe
             );
             if (i + 1 < steps) await delay(time / steps);
         }
+        Matter.Body.setPosition(
+            s.chain.anchor,
+            {
+                x: s.chain.anchor.position.x,
+                y: targetY
+            }
+        );
     } finally {
         s.chain.movingVertically = false;
     }

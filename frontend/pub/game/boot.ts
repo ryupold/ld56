@@ -32,6 +32,7 @@ export function initEngine(s: State,
     //loading curtain
     s.hud.curtain.segments = s.screen.width / 100;
     s.hud.curtain.y = 0;
+    s.hud.curtain.state = 'down';
 
     initP5(preload(s), setup(s, canvas), draw(s, s.debug.render));
 

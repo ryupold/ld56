@@ -6,9 +6,10 @@ import { CHAIN_MOVEMENT_DELTA, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MA
 import { spawnCreatureInRect } from "./creature.js";
 import { dropCurtain, pullUpCurtain } from "./curtain.js";
 import { createHousing, housingFloorWidth } from "./housing.js";
+import { resetHelp } from "./hud.js";
 import { MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
-import { Sketch } from "./p5.js";
+import { Image, Sketch } from "./p5.js";
 
 declare var Matter: MatterJs;
 const Engine = Matter.Engine,
@@ -21,15 +22,19 @@ const Engine = Matter.Engine,
 export async function initGame(s: State) {
     createHousing(s);
     linkChainAndClaw(s);
-
     restartGame(s);
 }
 
 export async function restartGame(s: State, resetTime: number = 3000) {
+    (<any>Matter.Common)._seed = Date.now();
+    s.chain.claw.grabs = 0;
+    // s.game.score = 0;
+    // s.hud.score.visible = s.game.score > 0;
+
     await Promise.all([
-        dropCurtain(s),
+        dropCurtain(s, resetTime),
         moveChainVertically(s, s.chain.verticalMin, resetTime),
-        moveChainHorizontally(s, initialChainPosition(s)),
+        moveChainHorizontally(s, initialChainPosition(s), resetTime),
     ]);
 
     //remove all creatures
@@ -40,17 +45,32 @@ export async function restartGame(s: State, resetTime: number = 3000) {
         Matter.Composite.remove(s.world, creature.body);
     }
 
-    spawnCreatures(s);
-
-    await pullUpCurtain(s);
-
+    //select next target
     s.images.targetCreature = Matter.Common.choose([...s.images.creaturesA, ...s.images.creaturesB]);
+
+    // spawn creatures with sprites other than the target
+    spawnCreatures(s, [...s.images.creaturesA, ...s.images.creaturesB].filter(i => i !== s.images.targetCreature));
+
+    await pullUpCurtain(s, 1000);
+    resetHelp(s);
+
     s.hud.clawButton.visible = true;
     s.game.started = true;
-    
+
+
     if (s.debug.grabbing) {
         s.patch(automateClaw);
     }
+}
+
+export async function gameOver(s: State) {
+    s.hud.clawButton.visible = false;
+    await dropCurtain(s);
+    s.game.started = false;
+
+    // await delay(5000);
+
+    await restartGame(s);
 }
 
 function linkChainAndClaw(s: State) {
@@ -70,21 +90,30 @@ function linkChainAndClaw(s: State) {
     s.chain.claw.comp = claw.claw;
     s.chain.claw.distance.upperConstraint = claw.distance.upper;
     s.chain.claw.distance.lowerConstraint = claw.distance.lower;
-
-    console.log(constraint);    
 }
 
-function spawnCreatures(s: State) {
+function spawnCreatures(s: State, nonTargetCreatureImages: Image[]) {
     const spawnRect = {
         x: 50,
         y: 0,
-        w: housingFloorWidth(s) - 150,
+        w: housingFloorWidth(s) - 200,
         h: s.screen.height / 3,
     };
-    const creatureCount = Math.min(CREATURE_COUNT_MAX, spawnRect.w * spawnRect.h / (2*CREATURE_SIZE_MAX * CREATURE_SIZE_MAX));
+    const creatureCount = Math.min(CREATURE_COUNT_MAX, spawnRect.w * spawnRect.h / (2 * CREATURE_SIZE_MAX * CREATURE_SIZE_MAX));
+    let targetIndex = Math.floor(Math.random() * creatureCount);
     //--- spawn creatures --------
     for (let i = 0; i < creatureCount; i++) {
-        spawnCreatureInRect(s, spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
+        spawnCreatureInRect(s, Matter.Common.choose(nonTargetCreatureImages), spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
+
+        // spawn target
+        if (targetIndex === i) {
+            spawnCreatureInRect(s, s.images.targetCreature, spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
+            targetIndex = -1;
+        }
+    }
+
+    if (targetIndex >= 0) {
+        spawnCreatureInRect(s, s.images.targetCreature, spawnRect.x, spawnRect.y, spawnRect.w, spawnRect.h);
     }
 }
 
@@ -146,8 +175,12 @@ function checkForGrabbedCreatures(s: State) {
     for (const model of removeCreatures) {
         Matter.Composite.remove(s.world, model.body);
         s.models.splice(s.models.indexOf(model), 1);
-        s.game.score += 1;
-        s.hud.score.visible = s.game.score > 0;
+    }
+
+    if (removeCreatures.find(m => m.type === ModelType.Creature && m.img == s.images.targetCreature)) {
+        // s.game.score += 1;
+        // s.hud.score.visible = s.game.score > 0;
+        s.patch(gameOver);
     }
 }
 

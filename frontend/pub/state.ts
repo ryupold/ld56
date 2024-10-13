@@ -68,9 +68,12 @@ export const init = createState({
 
     hud: {
         clawButton: {
-            x: 0, y: 0, w: 50, h: 50,
+            x: 0, y: 0, w: 50, h: 50, wm: 100, hm: 100,
             visible: false,
             pressed: false,
+        },
+        restartButton: {
+            x: 0, y: 0, w: 50, h: 50,
         },
         score: {
             x: 0, y: 0, w: 50, h: 50,
@@ -81,6 +84,7 @@ export const init = createState({
             segments: 1,
             y: 0,
         },
+        showHelpTime: 10000,
     },
 
     debug: {

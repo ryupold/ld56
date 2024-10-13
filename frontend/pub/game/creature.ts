@@ -2,6 +2,7 @@ import { State } from "../state.js";
 import { CREATURE_DENSITY, CREATURE_SIZE_MAX, CREATURE_SIZE_MIN } from "./constants.js";
 import { Body, BodyOptions, MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
+import { Image } from "./p5.js";
 
 export type Creature = {};
 
@@ -41,9 +42,9 @@ export function createCreatureBody(x: number, y: number) {
             }),
             // ...limbs,
         ],
-        friction: 0.9,
-        restitution: 0.1,
-        slop: 0.1,
+        friction: 0.95,
+        restitution: 0.0,
+        slop: 0.01,
     });
 
     body.angle = Matter.Common.random(-0.2, 0.2);
@@ -52,7 +53,7 @@ export function createCreatureBody(x: number, y: number) {
 }
 
 
-export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, spawnW: number, spawnH: number) {
+export function spawnCreatureInRect(s: State, img: Image, spawnX: number, spawnY: number, spawnW: number, spawnH: number) {
     const x = Matter.Common.random(spawnX, spawnX + spawnW);
     const y = Matter.Common.random(spawnY, spawnY + spawnH);
 
@@ -62,7 +63,7 @@ export function spawnCreatureInRect(s: State, spawnX: number, spawnY: number, sp
         id: newModelID(),
         type: ModelType.Creature,
         body: creature.body,
-        w: creature.bodyRadius * 3.5, h: creature.bodyRadius * 3.5,
-        img: Matter.Common.choose([...s.images.creaturesA, ...s.images.creaturesB]),
+        w: creature.bodyRadius * 3.2, h: creature.bodyRadius * 3.2,
+        img: img,
     });
 }

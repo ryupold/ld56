@@ -1,8 +1,7 @@
 import { State } from "../state.js";
 import { update } from "./game.js";
 import { drawHUD } from "./hud.js";
-import { radians } from "./math.js";
-import { Composite, MatterJs } from "./matter.js";
+import { MatterJs } from "./matter.js";
 import { ModelType } from "./model.js";
 import { Sketch } from "./p5.js";
 
@@ -48,7 +47,6 @@ export function draw(s: State, debugRender: boolean = false) {
         drawHUD(s, r);
     }
 }
-
 
 function drawClawGrabs(s: State, r: Sketch) {
     r.push(); {
