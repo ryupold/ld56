@@ -21,6 +21,7 @@ export const init = createState({
         movingHorizontally: false,
         movingVertically: false,
         anchor: <Body><unknown>undefined,
+        grabCounter: <Body><unknown>undefined,
         claw: {
             comp: <Composite><unknown>undefined,
             clawing: false,

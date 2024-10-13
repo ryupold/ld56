@@ -23,9 +23,6 @@ export async function initGame(s: State) {
     linkChainAndClaw(s);
 
     restartGame(s);
-    
-    await delay(10000);
-    restartGame(s);
 }
 
 export async function restartGame(s: State, resetTime: number = 3000) {
@@ -60,18 +57,21 @@ function linkChainAndClaw(s: State) {
     const chain = createChain(s);
     const claw = createClaw(s, { x: 0, y: chain.chain.bodies[chain.chain.bodies.length - 1].position.y + 10 }, { upper: CLAW_SEPERATOR_UPPER_MAX, lower: CLAW_SEPERATOR_LOWER_MAX });
 
-    Composite.add(s.world, Composite.create({
+    const constraint = Composite.create({
         constraints: [
             Constraint.create({
                 bodyA: chain.chain.bodies[chain.chain.bodies.length - 1],
                 bodyB: claw.claw.composites[0].composites[0].bodies[0],
             }),
         ]
-    }));
+    });
+    Composite.add(s.world, constraint);
     s.chain.anchor = chain.anchor;
     s.chain.claw.comp = claw.claw;
     s.chain.claw.distance.upperConstraint = claw.distance.upper;
     s.chain.claw.distance.lowerConstraint = claw.distance.lower;
+
+    console.log(constraint);    
 }
 
 function spawnCreatures(s: State) {

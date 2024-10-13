@@ -51,7 +51,7 @@ export async function moveChainHorizontally(s: State, targetX: number, time?: nu
     try {
         s.chain.movingHorizontally = true;
         const startX = s.chain.anchor.position.x;
-        if(!time) time = (targetX - startX) * 10;
+        if (!time) time = (targetX - startX) * 10;
         for (let i = 0; i < steps; i++) {
             Matter.Body.setPosition(s.chain.anchor, { x: startX + i / steps * (targetX - startX), y: s.chain.anchor.position.y });
             await delay(time / steps);
@@ -113,6 +113,20 @@ export function createChain(s: State) {
             w: segmentSize, h: segmentSize,
         });
     }
+
+    //append body for the grab count
+    const grabBox = Bodies.circle(0, 0, segmentSize / 2, opt);
+    Matter.Body.translate(grabBox, { x: 0, y: bodies.length * (segmentSize + 1) });
+    bodies.push(grabBox);
+    s.models.push({
+        id: newModelID(),
+        type: ModelType.ChainSegment,
+        body: grabBox,
+        img: s.images.claw.chainSegment,
+        w: segmentSize, h: segmentSize,
+    });
+    s.chain.grabCounter = grabBox;
+
     const chain = Composites.chain(Composite.create({ bodies }), 0, 0, 0, 0, {
         length: segmentSize + 1,
         stiffness: 1,
