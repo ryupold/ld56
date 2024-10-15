@@ -25,17 +25,17 @@ async function clawGrab(s: State, startU: number, startL: number, targetU: numbe
     }
 }
 
-export async function openClaw(s: State) {
+export async function openClaw(s: State, time: number = 3000, steps: number = 30) {
     if(s.chain.claw.clawing) return;
     s.chain.claw.clawing = true;
-    await clawGrab(s, CLAW_SEPERATOR_UPPER_MIN, CLAW_SEPERATOR_LOWER_MIN, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_LOWER_MAX);
+    await clawGrab(s, CLAW_SEPERATOR_UPPER_MIN, CLAW_SEPERATOR_LOWER_MIN, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_LOWER_MAX, time, steps);
     s.chain.claw.clawing = false;
 }
 
-export async function closeClaw(s: State) {
+export async function closeClaw(s: State, time: number = 3000, steps: number = 100) {
     if(s.chain.claw.clawing) return;
     s.chain.claw.clawing = true;
-    await clawGrab(s, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MIN, CLAW_SEPERATOR_LOWER_MIN);
+    await clawGrab(s, CLAW_SEPERATOR_UPPER_MAX, CLAW_SEPERATOR_LOWER_MAX, CLAW_SEPERATOR_UPPER_MIN, CLAW_SEPERATOR_LOWER_MIN, time, steps);
     s.chain.claw.clawing = false;
 }
 
