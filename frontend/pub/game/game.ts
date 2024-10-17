@@ -125,6 +125,7 @@ export function clawMovementAndUpdateHUD(s: State, r: Sketch) {
     if (s.debug.pressingHold || (r.mouseIsPressed && r.mouseX > s.hud.clawButton.x && r.mouseX < s.hud.clawButton.x + s.hud.clawButton.w && r.mouseY > s.hud.clawButton.y && r.mouseY < s.hud.clawButton.y + s.hud.clawButton.h && s.hud.clawButton.visible)) {
         s.hud.clawButton.pressed = true;
         if (s.game.state === 'idle') {
+            s.chain.claw.grabs++;
             s.game.state = 'movingForward';
         }
         if (s.game.state === 'movingForward') {
@@ -144,7 +145,6 @@ export function clawMovementAndUpdateHUD(s: State, r: Sketch) {
     } else {
         s.hud.clawButton.pressed = false;
         if (s.game.state === 'movingForward' || s.game.state === 'movingBack') {
-            s.chain.claw.grabs++;
             s.game.state = 'dropping';
             s.hud.clawButton.visible = false;
             s.patch(async () => {
