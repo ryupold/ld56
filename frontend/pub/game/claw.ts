@@ -61,7 +61,6 @@ export function createClaw(s: State, offset: V2, open: { upper: number, lower: n
             collisionFilter: { group: seg.group },
             density: CLAW_DENSITY,
             friction: 0.1,
-            // chamfer: { radius: segmentWidth/2 }, //TODO: test this
         };
 
         const c1 = Bodies.circle(seg.c1.x, seg.c1.y, seg.radius, options);

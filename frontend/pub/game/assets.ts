@@ -57,11 +57,17 @@ export function loadClawAssets(s: State, r: Sketch) {
     s.images.claw.clawBolt = r.loadImage(`${PREFIX}/pub/assets/img/claw/claw_bolt.png`);
     s.images.claw.chainSegment = r.loadImage(`${PREFIX}/pub/assets/img/claw/chain_segment.png`);
 }
+
 export function loadHousingAssets(s: State, r: Sketch) {
     s.images.housing.floor = r.loadImage(`${PREFIX}/pub/assets/img/housing/floor_wall.png`);
     s.images.housing.left = r.loadImage(`${PREFIX}/pub/assets/img/housing/left_wall.png`);
     s.images.housing.middle = r.loadImage(`${PREFIX}/pub/assets/img/housing/middle_wall.png`);
     s.images.housing.right = r.loadImage(`${PREFIX}/pub/assets/img/housing/right_wall.png`);
+}
+
+export function loadSounds(s: State, r: Sketch) {
+    s.sounds.metalPunch = r.loadSound(`${PREFIX}/pub/assets/sound/metalPunch.mp3`);
+    s.sounds.metalPunch.amp(0.01);
 }
 
 function* loadImages(r: Sketch, ...srcs: string[]) {

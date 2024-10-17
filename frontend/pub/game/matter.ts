@@ -11,9 +11,10 @@ export type MatterJs = {
     Composite: CompositeModule,
     Composites: CompositesModule,
     Constraint: ConstraintModule,
+    Events: EventsModule,
     MouseConstraint: any,
     Mouse: MouseModule,
-    Events: EventsModule,
+    Query: QueryModule,
     Render: any,
     Runner: any,
     Vector: VectorModule,
@@ -199,16 +200,16 @@ export type VectorModule = {
     sub: (a: V2, b: V2, output?: V2) => V2;
     div: (v: V2, s: number) => V2;
     mult: (v: V2, s: number) => V2;
-    
+
     angle: (a: V2, b: V2) => number;
     cross: (a: V2, b: V2) => number;
     cross3: (a: V2, b: V2, c: V2) => number;
     dot: (a: V2, b: V2) => number;
-    
+
     magnitude: (a: V2) => number;
     magnitudeSquared: (a: V2) => number;
     normalise: (a: V2) => V2;
-    
+
     rotate: (v: V2, angle: number, output?: V2) => V2;
     rotateAbout: (v: V2, angle: number, point: V2, output?: V2) => V2;
 };
@@ -229,3 +230,28 @@ export type CommonModule = {
     random: (min: number, max: number) => number;
     shuffle: <T>(list: T[]) => T[]
 }
+
+
+export type QueryModule = {
+    collides: (body: Body, bodies: Body[]) => Collision[];
+    points: (bodies: Body[], point: V2) => Body[];
+};
+
+export type Collision = {
+    bodyA: Body,
+    bodyB: Body,
+    parentA: Body,
+    parentB: Body,
+    collided: boolean,
+    normal: V2,
+    pair: Pair,
+    depth: number,
+    penetration: V2,
+    supportCount: number,
+    tangent: V2,
+    supports: V2[],
+};
+
+export type Pair = {
+
+};

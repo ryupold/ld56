@@ -18,6 +18,14 @@ export type Image = {
     pixels: [number, number, number, number][];
 };
 
+/** https://p5js.org/reference/p5.sound */
+export type Sound = {
+    play: () => void;
+    isPlaying: () => boolean;
+    stop: () => void;
+    amp: (v?: number) => void;
+};
+
 /** https://p5js.org/reference/ */
 export type Sketch = {
     //canvas 
@@ -44,6 +52,7 @@ export type Sketch = {
     image: (img: any, destX: number, destY: number, destW: number, destH: number, srcX?: number, srcY?: number, srcW?: number, srcH?: number, fit?: "CONTAIN" | "COVER", xAlign?: "LEFT" | "RIGHT" | "CENTER", yAlign?: "TOP" | "BOTTOM" | "CENTER") => void;
     imageMode: (mode: any) => void;
     loadImage: (path: string, success?: () => void, error?: (err: any) => void) => Image;
+    loadSound: (path: string, success?: () => void, error?: (err: any) => void) => Sound;
     saveGif: (file: string, duration: number, options?: {
         delay?: number, units?: "seconds" | "frames", silent?: boolean, notificationDuration?: number,
         /** default: 'progressBar' */ notificationID?: string

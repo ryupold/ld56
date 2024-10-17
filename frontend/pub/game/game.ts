@@ -25,11 +25,17 @@ export async function initGame(s: State) {
     restartGame(s);
 }
 
+export function update(s: State, r: Sketch) {
+    checkForGrabbedCreatures(s);
+
+    clawMovementAndUpdateHUD(s, r);
+
+    // checkCollisionsAndPlaySounds(s, r);
+}
+
 export async function restartGame(s: State, resetTime: number = 3000) {
     (<any>Matter.Common)._seed = Date.now();
     s.chain.claw.grabs = 0;
-    // s.game.score = 0;
-    // s.hud.score.visible = s.game.score > 0;
 
     await Promise.all([
         dropCurtain(s, resetTime),
@@ -67,9 +73,6 @@ export async function gameOver(s: State) {
     s.hud.clawButton.visible = false;
     await dropCurtain(s);
     s.game.started = false;
-
-    // await delay(5000);
-
     await restartGame(s);
 }
 
@@ -164,10 +167,17 @@ export function initialChainPosition(s: State) {
     return s.screen.width - (s.screen.width - housingFloorWidth(s)) / 2;
 }
 
-export function update(s: State, r: Sketch) {
-    checkForGrabbedCreatures(s);
 
-    clawMovementAndUpdateHUD(s, r);
+
+function checkCollisionsAndPlaySounds(s: State, r: Sketch) {
+    const clawBodies = Matter.Composite.allBodies(s.chain.claw.comp);
+    for (const b of clawBodies) {
+        const collisions = Matter.Query.collides(b, s.models.filter(m => m.type === ModelType.Housing).map(m => m.body))
+        if (collisions.length > 0) {
+            s.sounds.metalPunch?.play();
+            break;
+        }
+    }
 }
 
 function checkForGrabbedCreatures(s: State) {

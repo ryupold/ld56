@@ -29,41 +29,48 @@ export function drawHUD(s: State, r: Sketch) {
 function drawClawButton(s: State, r: Sketch) {
     const clawButton = s.hud.clawButton;
     if (clawButton.visible) {
-        r.push();
+        r.push(); {
+            let x = clawButton.x;
+            let y = clawButton.y;
+            let w = clawButton.w;
+            let h = clawButton.h;
 
-        let x = clawButton.x;
-        let y = clawButton.y;
-        let w = clawButton.w;
-        let h = clawButton.h;
+            if (clawButton.pressed) {
+                x = clawButton.x - (clawButton.wm - clawButton.w) / 2;
+                y = clawButton.y - (clawButton.hm - clawButton.h) / 2;
+                w = clawButton.wm;
+                h = clawButton.hm;
+            }
 
-        if (clawButton.pressed) {
-            x = clawButton.x - (clawButton.wm - clawButton.w) / 2;
-            y = clawButton.y - (clawButton.hm - clawButton.h) / 2;
-            w = clawButton.wm;
-            h = clawButton.hm;
-        }
+            r.translate(x, y);
+            r.stroke(255, 255, 255);
 
-        r.translate(x, y);
-        r.stroke(255, 255, 255);
+            if (clawButton.pressed)
+                r.fill(200, 200, 200);
+            else
+                r.fill(24, 24, 24);
 
-        if (clawButton.pressed)
-            r.fill(200, 200, 200);
-        else
-            r.fill(24, 24, 24);
+            r.circle(w / 2, h / 2, w);
+            r.textSize(18);
+            r.textAlign(r.CENTER, r.CENTER);
+            const tw = r.textWidth("🟢");
+            r.translate(tw / 2, h / 2);
 
-        r.circle(w / 2, h / 2, w);
-        r.textSize(18);
-        r.textAlign(r.CENTER, r.CENTER);
-        const tw = r.textWidth("🟢");
-        r.translate(tw / 2, h / 2);
+            if (clawButton.pressed)
+                r.fill(255, 255, 255);
+            else
+                r.fill(24, 24, 24);
 
-        if (clawButton.pressed)
-            r.fill(255, 255, 255);
-        else
-            r.fill(24, 24, 24);
+            r.text("🟢", (w - tw) / 2, 0);
 
-        r.text("🟢", (w - tw) / 2, 0);
-        r.pop();
+            // let sin = Math.sin(Date.now() / 300);
+            // if (sin < 0) sin /= 4;
+            // r.push();{
+            //     r.translate(w + 5, h / 2);
+            //     r.rotate(Math.PI / 2);
+            //     r.text("👈 press and hold", Math.abs(sin * 30), 0);
+            // }r.pop();
+        } r.pop();
     }
 }
 
@@ -95,7 +102,6 @@ function drawCurtain(s: State, r: Sketch) {
         r.translate(0, s.hud.curtain.y);
         r.imageMode(r.CORNER);
         for (let i = 0; i < s.hud.curtain.segments; i++) {
-            // r.tint(255, 128);
             r.image(s.images.hud.curtain, i * s.screen.width / s.hud.curtain.segments, 0, s.screen.width / s.hud.curtain.segments, s.screen.height);
         }
     } r.pop();

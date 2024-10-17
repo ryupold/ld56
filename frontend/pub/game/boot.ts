@@ -4,7 +4,7 @@ import { MatterJs } from "./matter.js";
 import { initGame } from "./game.js";
 import { draw } from "./render.js";
 import { initHUD } from "./hud.js";
-import { loadClawAssets, loadCommonAssets, loadCreatureAssets, loadHousingAssets } from "./assets.js";
+import { loadClawAssets, loadCommonAssets, loadCreatureAssets, loadHousingAssets, loadSounds } from "./assets.js";
 
 declare var Matter: MatterJs;
 const tickRate = 60;
@@ -15,6 +15,7 @@ function preload(s: State) {
         loadCreatureAssets(s, r);
         loadClawAssets(s, r);
         loadHousingAssets(s, r);
+        loadSounds(s, r);
     }
 }
 

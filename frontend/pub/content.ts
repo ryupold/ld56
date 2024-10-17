@@ -1,4 +1,4 @@
-import { BUTTON, CANVAS, DIV, H1, MAIN, Vode, delay, resetID } from "./exports.js";
+import { BUTTON, CANVAS, DIV, H1, MAIN, P, Vode, delay, resetID } from "./exports.js";
 import { initEngine } from "./game/boot.js";
 import { moveChain, moveChainVertically } from "./game/chain.js";
 import { closeClaw, openClaw } from "./game/claw.js";
@@ -49,10 +49,14 @@ export const content = (s: State): Vode<State> => {
             // },
         }],
         [DIV, { id: 'game-hud' },
+            [P, { class: "info" },
+                `Press and hold 🟢 to move the claw to the left (it turns at the end). Once you release the button the claw tries to grab something and returns to the start to drop it. Then you can repeat until all you get all creatures.`],
+            [P, { class: "info" }, "Please rotate your device to landscape before playing."],
             [BUTTON, {
                 class: 'start-button',
                 onclick: async (ss: State, e: Event) => {
                     (e.target as any)?.remove();
+                    document.querySelectorAll('p.info').forEach(x => x.remove());
                     await startGame(ss, isMobile());
                 },
             }, "start game"]
@@ -70,7 +74,7 @@ const unusedButtons = [
     [BUTTON, { onclick: (ss: State, e: Event) => moveChainVertically(ss, ss.chain.verticalMax) }, "🔽"],
 ];
 
-function isMobile(){
+function isMobile() {
     return !!(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone|iPad|iPod/i)
         || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)
         || navigator.userAgent.match(/Opera Mini/i)
