@@ -50,7 +50,7 @@ export const content = (s: State): Vode<State> => {
         }],
         [DIV, { id: 'game-hud' },
             [P, { class: "info" },
-                `Press and hold 🟢 to move the claw to the left (it turns at the end). Once you release the button the claw tries to grab something and returns to the start to drop it. Then you can repeat until all you get all creatures.`],
+                `Press and hold 🟢 to move the claw to the left (it turns at the end). Once you release the button the claw tries to grab something and returns to the start to drop it.`],
             [P, { class: "info" }, "Please rotate your device to landscape before playing."],
             [BUTTON, {
                 class: 'start-button',
