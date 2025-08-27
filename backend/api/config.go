@@ -6,23 +6,23 @@ import (
 	"ryupold/website/ludumdare/ld56/website"
 )
 
-type APIConfig struct {
+type ModuleConfig struct {
 	DBPath       string
-	APIPrefix    string
+	Prefix       string
 	FrontendPath string
 	BackendPath  string
 	LogDirectory string
 }
 
-var Config APIConfig = APIConfig{
+var Config ModuleConfig = ModuleConfig{
 	DBPath:       "",
-	APIPrefix:    "",
+	Prefix:       "",
 	FrontendPath: "",
 	BackendPath:  "",
 	LogDirectory: "",
 }
 
-func Routes(config APIConfig) []website.Route {
+func Routes(config ModuleConfig) []website.Route {
 	Config = config
 
 	db.DBPath = config.DBPath

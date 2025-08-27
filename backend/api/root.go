@@ -6,9 +6,9 @@ import (
 	"strings"
 )
 
-func Root(config APIConfig) func(r *http.Request) (website.MaybeRoute, error) {
+func Root(config ModuleConfig) func(r *http.Request) (website.MaybeRoute, error) {
 	return func(r *http.Request) (website.MaybeRoute, error) {
-		path := Path(Config.APIPrefix, r)
+		path := Path(Config.Prefix, r)
 		if path == "/" {
 			path = "/index.html"
 		}

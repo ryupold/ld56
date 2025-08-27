@@ -15,7 +15,7 @@ var database *db.DB
 
 // var apiCreatures = regexp.MustCompile(`^\/api\/creatures\/?(?:$|\?)`)
 
-func PublicAPI(config APIConfig) func(r *http.Request) (website.MaybeRoute, error) {
+func PublicAPI(config ModuleConfig) func(r *http.Request) (website.MaybeRoute, error) {
 	return func(r *http.Request) (website.MaybeRoute, error) {
 		// path := Path(Config.APIPrefix, r)
 

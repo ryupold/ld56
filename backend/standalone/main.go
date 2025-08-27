@@ -18,9 +18,9 @@ func routes() []website.Route {
 			website.Root,
 		},
 
-		ld56.Routes(ld56.APIConfig{
+		ld56.Routes(ld56.ModuleConfig{
 			DBPath:       website.Config.DataDirectory + "/ludumdare/ld56/db",
-			APIPrefix:    "/ludumdare/ld56",
+			Prefix:       "/ludumdare/ld56",
 			FrontendPath: website.ProjectRoot + "/modules/ludumdare/ld56/frontend",
 			BackendPath:  website.ProjectRoot + "/modules/ludumdare/ld56/backend",
 		}),
